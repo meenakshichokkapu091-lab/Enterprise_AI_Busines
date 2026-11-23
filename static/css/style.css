@@ -1,0 +1,176 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f6fb;
+    color: #1e293b;
+}
+
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background: #111b35;
+    color: white;
+    min-height: 100vh;
+    padding: 28px 18px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 45px;
+}
+
+.brand-icon {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 13px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.brand h2 {
+    font-size: 21px;
+}
+
+.brand h2 span {
+    color: #8b9cff;
+}
+
+.brand small,
+.sidebar-bottom small {
+    color: #aab4ce;
+    display: block;
+    margin-top: 5px;
+}
+
+.menu-heading {
+    color: #8290ad;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav-link {
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 13px 14px;
+    border-radius: 10px;
+    transition: 0.25s;
+}
+
+.nav-link span {
+    margin-right: 10px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: #29385f;
+    color: white;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding: 18px 8px;
+    border-top: 1px solid #33415f;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    background: #22c55e;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    background: white;
+    padding: 25px 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.page-heading h1 {
+    font-size: 25px;
+    margin-bottom: 6px;
+}
+
+.page-heading p {
+    color: #718096;
+    font-size: 14px;
+}
+
+.upload-button {
+    background: #5268e8;
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 9px;
+    font-weight: 600;
+}
+
+.upload-button:hover {
+    background: #4053ca;
+}
+
+.page-content {
+    padding: 35px;
+    min-height: 75vh;
+}
+
+.footer {
+    padding: 20px 35px;
+    color: #8490a5;
+    font-size: 13px;
+    border-top: 1px solid #e5e9f2;
+}
+
+.menu-toggle {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
+    .topbar {
+        padding: 18px;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .page-content {
+        padding: 18px;
+    }
+}
