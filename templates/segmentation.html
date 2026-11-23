@@ -1,0 +1,89 @@
+
+{% extends "base.html" %}
+{% block title %}Customer Segmentation | Enterprise AI{% endblock %}
+{% block body_class %}theme-segmentation{% endblock %}
+{% block page_heading %}Customer Segmentation{% endblock %}
+{% block page_subtitle %}Group customers based on their purchasing behaviour{% endblock %}
+
+{% block content %}
+
+<section class="hero-banner">
+    <div>
+        <h2>Know Your Customers</h2>
+        <p>K-Means clustering helps identify groups of customers with similar buying patterns.</p>
+    </div>
+    <div class="hero-icon">◎</div>
+</section>
+
+<div class="panel-grid">
+    <div class="panel">
+        <h3>Customer Segment Distribution</h3>
+        <div class="chart-area">
+            <canvas id="segmentDistributionChart"></canvas>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h3>About K-Means</h3>
+        <p>Customers are grouped using purchasing information such as total spending, purchase frequency and recent activity.</p>
+        <p><strong>Algorithm:</strong> K-Means Clustering</p>
+        <p><strong>Purpose:</strong> Identify customer groups for better business decisions.</p>
+    </div>
+</div>
+
+<h2 class="section-title">Customer Details</h2>
+
+<div class="panel">
+    <div class="panel-header">
+        <h3>Segmented Customers</h3>
+        <input type="text" id="segmentSearch" placeholder="Search customers..."
+               onkeyup="searchTable('segmentSearch','segmentTable')">
+    </div>
+
+    <div class="table-wrap">
+        <table id="segmentTable">
+            <thead>
+                <tr>
+                    <th>Customer ID</th>
+                    <th>Total Spend</th>
+                    <th>Purchase Frequency</th>
+                    <th>Days Inactive</th>
+                    <th>Customer Segment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in segmentation_records %}
+                <tr>
+                    <td>{{ customer.get('customer_id', '') }}</td>
+                    <td>{{ customer.get('total_spend', '') }}</td>
+                    <td>{{ customer.get('purchase_frequency', '') }}</td>
+                    <td>{{ customer.get('days_since_last_purchase', '') }}</td>
+                    <td>{{ customer.get('segment_name', '') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+const segmentLabels = {{ customer_segments | tojson }};
+const segmentValues = {{ segment_counts | tojson }};
+
+new Chart(document.getElementById('segmentDistributionChart'), {
+    type: 'pie',
+    data: {
+        labels: segmentLabels,
+        datasets: [{
+            data: segmentValues,
+            backgroundColor: ['#A78BFA', '#38BDF8', '#34D399', '#FBBF24', '#FB7185']
+        }]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,88 @@
+
+{% extends "base.html" %}
+{% block title %}Sales Forecasting | Enterprise AI{% endblock %}
+{% block body_class %}theme-forecast{% endblock %}
+{% block page_heading %}AI Sales Forecasting{% endblock %}
+{% block page_subtitle %}Predict future sales using the XGBoost model{% endblock %}
+
+{% block content %}
+
+<section class="hero-banner">
+    <div>
+        <h2>Predict Future Sales</h2>
+        <p>Use machine learning predictions to support business planning.</p>
+    </div>
+    <div class="hero-icon">⌁</div>
+</section>
+
+{% if forecast_error %}
+<div class="panel">
+    <h3>Forecast Not Available</h3>
+    <p>{{ forecast_error }}</p>
+</div>
+{% else %}
+
+<div class="panel">
+    <div class="panel-header">
+        <h3>Next 30 Days Sales Forecast</h3>
+        <span class="badge">XGBoost Model</span>
+    </div>
+    <div class="chart-area large-chart">
+        <canvas id="forecastChart"></canvas>
+    </div>
+</div>
+
+<h2 class="section-title">Forecast Results</h2>
+
+<div class="panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Predicted Sales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(forecast_labels|length) %}
+                <tr>
+                    <td>{{ forecast_labels[i] }}</td>
+                    <td>{{ forecast_values[i] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{% if not forecast_error %}
+<script>
+const forecastLabels = {{ forecast_labels | tojson }};
+const forecastValues = {{ forecast_values | tojson }};
+
+new Chart(document.getElementById('forecastChart'), {
+    type: 'line',
+    data: {
+        labels: forecastLabels,
+        datasets: [{
+            label: 'Predicted Sales',
+            data: forecastValues,
+            borderColor: '#8B5CF6',
+            backgroundColor: 'rgba(139,92,246,0.15)',
+            fill: true,
+            tension: 0.35
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

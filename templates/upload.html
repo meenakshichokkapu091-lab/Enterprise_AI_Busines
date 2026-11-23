@@ -1,0 +1,268 @@
+
+{% extends "base.html" %}
+
+{% block title %}Upload Dataset | Enterprise AI{% endblock %}
+{% block body_class %}theme-overview{% endblock %}
+
+{% block page_heading %}Upload Business Dataset{% endblock %}
+{% block page_subtitle %}Upload your data to begin AI-powered business analytics{% endblock %}
+
+{% block content %}
+
+<style>
+.upload-wrapper {
+    max-width: 850px;
+    margin: 25px auto;
+}
+
+.upload-card {
+    background: white;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+    text-align: center;
+}
+
+.upload-icon {
+    width: 85px;
+    height: 85px;
+    margin: 0 auto 20px;
+    border-radius: 22px;
+    background: #EDE9FE;
+    color: #7C3AED;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+}
+
+.upload-card h2 {
+    margin-bottom: 10px;
+    color: #1E293B;
+}
+
+.upload-card p {
+    color: #64748B;
+}
+
+.file-drop-area {
+    border: 2px dashed #A78BFA;
+    border-radius: 15px;
+    padding: 35px 15px;
+    margin: 25px 0;
+    background: #FAF9FF;
+    transition: 0.3s;
+}
+
+.file-drop-area:hover {
+    background: #F3F0FF;
+    border-color: #7C3AED;
+}
+
+.file-drop-area input {
+    display: block;
+    margin: 18px auto;
+    max-width: 100%;
+}
+
+.file-name {
+    margin: 15px 0;
+    font-weight: 600;
+    color: #6D28D9;
+    overflow-wrap: anywhere;
+}
+
+.upload-button {
+    background: #7C3AED;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 30px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.upload-button:hover {
+    background: #5B21B6;
+    transform: translateY(-2px);
+}
+
+.upload-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.upload-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.info-box {
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.04);
+}
+
+.info-box h4 {
+    margin-bottom: 8px;
+    color: #334155;
+}
+
+.info-box p {
+    font-size: 13px;
+    color: #64748B;
+}
+
+.upload-message {
+    padding: 12px;
+    border-radius: 9px;
+    margin-bottom: 15px;
+    background: #FEF2F2;
+    color: #B91C1C;
+}
+
+@media(max-width:650px) {
+    .upload-card {
+        padding: 22px;
+    }
+
+    .upload-info {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="upload-wrapper">
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="upload-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="upload-card">
+
+        <div class="upload-icon">⇧</div>
+
+        <h2>Upload Your Dataset</h2>
+
+        <p>
+            Start analysing your business data with artificial intelligence
+            and machine learning.
+        </p>
+
+        <form
+            id="uploadForm"
+            action="{{ url_for('upload_file') }}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <div class="file-drop-area">
+
+                <h3>Select Your Business File</h3>
+
+                <p>Choose a CSV or Excel dataset from your computer</p>
+
+                <input
+                    type="file"
+                    id="datasetFile"
+                    name="file"
+                    accept=".csv,.xlsx"
+                    required
+                >
+
+                <div class="file-name" id="fileName">
+                    No file selected
+                </div>
+
+            </div>
+
+            <button
+                type="submit"
+                class="upload-button"
+                id="uploadButton"
+            >
+                Upload and Analyse →
+            </button>
+
+            <p id="uploadStatus" style="margin-top:15px;"></p>
+
+        </form>
+
+    </div>
+
+    <div class="upload-info">
+
+        <div class="info-box">
+            <h4>📁 Data Processing</h4>
+            <p>Automatic dataset cleaning and preparation.</p>
+        </div>
+
+        <div class="info-box">
+            <h4>📊 Business Analytics</h4>
+            <p>Explore sales, customers and business performance.</p>
+        </div>
+
+        <div class="info-box">
+            <h4>🤖 AI Predictions</h4>
+            <p>Forecast sales and identify customer churn risk.</p>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+const datasetFile = document.getElementById("datasetFile");
+const fileName = document.getElementById("fileName");
+const uploadForm = document.getElementById("uploadForm");
+const uploadButton = document.getElementById("uploadButton");
+const uploadStatus = document.getElementById("uploadStatus");
+
+datasetFile.addEventListener("change", function () {
+
+    if (this.files.length > 0) {
+
+        const file = this.files[0];
+        const extension = file.name.split(".").pop().toLowerCase();
+
+        if (!["csv", "xlsx"].includes(extension)) {
+            fileName.textContent = "Please select a CSV or XLSX file.";
+            datasetFile.value = "";
+            return;
+        }
+
+        fileName.textContent = "Selected: " + file.name;
+
+    } else {
+        fileName.textContent = "No file selected";
+    }
+});
+
+uploadForm.addEventListener("submit", function (event) {
+
+    if (!datasetFile.files.length) {
+        event.preventDefault();
+        uploadStatus.textContent = "Please select a dataset first.";
+        return;
+    }
+
+    uploadButton.disabled = true;
+    uploadButton.textContent = "Uploading and Analysing...";
+    uploadStatus.textContent = "Please wait while your dataset is processed.";
+});
+</script>
+
+{% endblock %}
+
+

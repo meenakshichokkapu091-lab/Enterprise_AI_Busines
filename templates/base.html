@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Enterprise AI{% endblock %}</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+<div class="app-layout">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">AI</div>
+            <div>
+                <h2>Enterprise<span>AI</span></h2>
+                <small>Business Intelligence</small>
+            </div>
+        </div>
+
+        <div class="menu-heading">WORKSPACE</div>
+
+        <nav class="navigation">
+
+            <a href="{{ url_for('overview') }}"
+               class="nav-link {% if request.endpoint == 'overview' %}active{% endif %}">
+                <span>▦</span> Overview
+            </a>
+
+            <a href="{{ url_for('data_cleaning') }}"
+               class="nav-link {% if request.endpoint == 'data_cleaning' %}active{% endif %}">
+                <span>▤</span> Data Cleaning
+            </a>
+
+            <a href="{{ url_for('sales_analytics') }}"
+               class="nav-link {% if request.endpoint == 'sales_analytics' %}active{% endif %}">
+                <span>▥</span> Sales Analytics
+            </a>
+
+            <a href="{{ url_for('forecasting') }}"
+               class="nav-link {% if request.endpoint == 'forecasting' %}active{% endif %}">
+                <span>↗</span> Sales Forecasting
+            </a>
+
+            <a href="{{ url_for('segmentation') }}"
+               class="nav-link {% if request.endpoint == 'segmentation' %}active{% endif %}">
+                <span>◉</span> Customer Segmentation
+            </a>
+
+            <a href="{{ url_for('churn') }}"
+               class="nav-link {% if request.endpoint == 'churn' %}active{% endif %}">
+                <span>◎</span> Churn Prediction
+            </a>
+
+            <a href="{{ url_for('recommendations') }}"
+               class="nav-link {% if request.endpoint == 'recommendations' %}active{% endif %}">
+                <span>✧</span> Recommendations
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="status-dot"></div>
+            <div>
+                <strong>AI System Active</strong>
+                <small>Analytics workspace</small>
+            </div>
+        </div>
+
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+            <div class="page-heading">
+                <h1>{% block page_heading %}Overview{% endblock %}</h1>
+                <p>{% block page_subtitle %}Business performance at a glance{% endblock %}</p>
+            </div>
+
+            <div class="topbar-actions">
+                <a href="{{ url_for('home') }}" class="upload-button">
+                    + Upload Dataset
+                </a>
+            </div>
+
+        </header>
+
+        <section class="page-content">
+
+            {% block content %}
+            {% endblock %}
+
+        </section>
+
+        <footer class="footer">
+            Enterprise AI Business Intelligence Platform
+        </footer>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+{% block scripts %}
+{% endblock %}
+
+</body>
+</html>

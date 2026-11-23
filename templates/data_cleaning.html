@@ -1,0 +1,91 @@
+
+{% extends "base.html" %}
+{% block title %}Data Cleaning | Enterprise AI{% endblock %}
+{% block body_class %}theme-cleaning{% endblock %}
+{% block page_heading %}Data Cleaning{% endblock %}
+{% block page_subtitle %}Automatic data preparation and quality checking{% endblock %}
+
+{% block content %}
+
+<section class="hero-banner">
+    <div>
+        <h2>Clean Data. Better Decisions.</h2>
+        <p>Your uploaded dataset is automatically checked and prepared for analysis.</p>
+    </div>
+    <div class="hero-icon">✧</div>
+</section>
+
+<h2 class="section-title">Cleaning Report</h2>
+
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <span>Original Rows</span>
+        <h2>{{ cleaning_report.get('original_rows', 0) }}</h2>
+    </div>
+    <div class="kpi-card">
+        <span>Cleaned Rows</span>
+        <h2>{{ cleaning_report.get('cleaned_rows', 0) }}</h2>
+    </div>
+    <div class="kpi-card">
+        <span>Duplicates Removed</span>
+        <h2>{{ cleaning_report.get('duplicates_removed', 0) }}</h2>
+    </div>
+    <div class="kpi-card">
+        <span>Missing Numeric Values Filled</span>
+        <h2>{{ cleaning_report.get('missing_numeric_filled', 0) }}</h2>
+    </div>
+    <div class="kpi-card">
+        <span>Missing Text Values Filled</span>
+        <h2>{{ cleaning_report.get('missing_text_filled', 0) }}</h2>
+    </div>
+    <div class="kpi-card">
+        <span>Invalid Order Dates</span>
+        <h2>{{ cleaning_report.get('invalid_order_dates', 0) }}</h2>
+    </div>
+</div>
+
+<div class="panel">
+    <h3>Cleaning Status</h3>
+    <p>Your dataset has passed through the automatic cleaning process.</p>
+    <p><strong>Original columns:</strong> {{ cleaning_report.get('original_columns', 0) }}</p>
+    <p><strong>Cleaned columns:</strong> {{ cleaning_report.get('cleaned_columns', 0) }}</p>
+
+    {% if cleaned_filename %}
+    <a class="btn" href="{{ url_for('download_cleaned', filename=cleaned_filename) }}">
+        Download Cleaned CSV
+    </a>
+    {% endif %}
+</div>
+
+<h2 class="section-title">Cleaned Dataset Preview</h2>
+
+<div class="panel">
+    <div class="panel-header">
+        <h3>First 10 Records</h3>
+        <input type="text" id="cleaningSearch" placeholder="Search records..."
+               onkeyup="searchTable('cleaningSearch','cleaningTable')">
+    </div>
+
+    <div class="table-wrap">
+        <table id="cleaningTable">
+            <thead>
+                <tr>
+                    {% for column in columns %}
+                    <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    {% for column in columns %}
+                    <td>{{ record.get(column, '') }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

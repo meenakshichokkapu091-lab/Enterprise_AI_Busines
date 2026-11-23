@@ -1,0 +1,121 @@
+
+{% extends "base.html" %}
+{% block title %}Churn Prediction | Enterprise AI{% endblock %}
+{% block body_class %}theme-churn{% endblock %}
+{% block page_heading %}Customer Churn Prediction{% endblock %}
+{% block page_subtitle %}Identify customers who may stop purchasing{% endblock %}
+
+{% block content %}
+
+<section class="hero-banner">
+    <div>
+        <h2>Retain Your Customers</h2>
+        <p>Machine learning helps identify customers who may need attention.</p>
+    </div>
+    <div class="hero-icon">♡</div>
+</section>
+
+{% if churn_error %}
+<div class="panel">
+    <h3>Churn Prediction Unavailable</h3>
+    <p>{{ churn_error }}</p>
+</div>
+{% else %}
+
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <span>Total Customers</span>
+        <h2>{{ total_customers }}</h2>
+    </div>
+    <div class="kpi-card">
+        <span>At-risk Customers</span>
+        <h2>{{ at_risk_customers }}</h2>
+    </div>
+    <div class="kpi-card">
+        <span>Active Customers</span>
+        <h2>{{ active_customers }}</h2>
+    </div>
+    <div class="kpi-card">
+        <span>Churn Risk</span>
+        <h2>{{ churn_percentage }}%</h2>
+    </div>
+</div>
+
+<div class="panel-grid">
+    <div class="panel">
+        <h3>Customer Risk Distribution</h3>
+        <div class="chart-area">
+            <canvas id="churnChart"></canvas>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h3>Understanding Churn Prediction</h3>
+        <p>The model analyses customer purchasing behaviour to estimate churn risk.</p>
+        <p><strong>Model:</strong> Random Forest Classifier</p>
+        <p><strong>Inputs:</strong> Total spend, purchase frequency and average order value.</p>
+        <p><strong>Note:</strong> This project uses inactivity as a proxy for churn, not confirmed future customer loss.</p>
+    </div>
+</div>
+
+<h2 class="section-title">Customer Risk Details</h2>
+
+<div class="panel">
+    <div class="panel-header">
+        <h3>Customer Predictions</h3>
+        <input type="text" id="churnSearch" placeholder="Search customers..."
+               onkeyup="searchTable('churnSearch','churnTable')">
+    </div>
+
+    <div class="table-wrap">
+        <table id="churnTable">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Total Spend</th>
+                    <th>Purchase Frequency</th>
+                    <th>Average Order Value</th>
+                    <th>Churn Probability</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in churn_customers %}
+                <tr>
+                    <td>{{ customer.get('customer_name', '') }}</td>
+                    <td>{{ customer.get('total_spend', '') }}</td>
+                    <td>{{ customer.get('purchase_frequency', '') }}</td>
+                    <td>{{ customer.get('average_order_value', '') }}</td>
+                    <td>{{ customer.get('churn_probability', '') }}</td>
+                    <td>{{ customer.get('churn_status', '') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{% if not churn_error %}
+<script>
+const atRisk = {{ at_risk_customers | tojson }};
+const active = {{ active_customers | tojson }};
+
+new Chart(document.getElementById('churnChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['At Risk', 'Active'],
+        datasets: [{
+            data: [atRisk, active],
+            backgroundColor: ['#F87171', '#34D399']
+        }]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+});
+</script>
+{% endif %}
+{% endblock %}

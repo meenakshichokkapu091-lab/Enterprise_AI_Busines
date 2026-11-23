@@ -1,0 +1,55 @@
+
+{% extends "base.html" %}
+{% block title %}Recommendations | Enterprise AI{% endblock %}
+{% block body_class %}theme-recommendations{% endblock %}
+{% block page_heading %}AI Business Recommendations{% endblock %}
+{% block page_subtitle %}Turn business data into useful actions{% endblock %}
+
+{% block content %}
+
+<section class="hero-banner">
+    <div>
+        <h2>Make Smarter Business Decisions</h2>
+        <p>Explore recommendations based on your business analytics.</p>
+    </div>
+    <div class="hero-icon">✧</div>
+</section>
+
+{% if recommendation_error %}
+<div class="panel">
+    <h3>Recommendations Unavailable</h3>
+    <p>{{ recommendation_error }}</p>
+</div>
+{% elif business_recommendations %}
+
+<div class="recommendation-list">
+    {% for recommendation in business_recommendations %}
+    <div class="recommendation-card">
+        <div class="recommendation-number">{{ loop.index }}</div>
+        <div>
+            <h3>Business Insight {{ loop.index }}</h3>
+            <p>{{ recommendation }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<div class="panel">
+    <h3>No Recommendations Available</h3>
+    <p>Upload a dataset to generate business recommendations.</p>
+</div>
+{% endif %}
+
+<div class="panel">
+    <h3>How These Recommendations Help</h3>
+    <ul>
+        <li>Understand sales performance.</li>
+        <li>Identify customer behaviour patterns.</li>
+        <li>Find areas that may need improvement.</li>
+        <li>Support better business planning.</li>
+    </ul>
+</div>
+
+{% endblock %}
+

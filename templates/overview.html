@@ -1,0 +1,150 @@
+
+{% extends "base.html" %}
+{% block title %}Overview | Enterprise AI{% endblock %}
+{% block body_class %}theme-overview{% endblock %}
+{% block page_heading %}Business Overview{% endblock %}
+{% block page_subtitle %}Your business performance at a glance{% endblock %}
+
+{% block content %}
+
+<section class="hero-banner">
+    <div>
+        <h2>Welcome to Enterprise AI</h2>
+        <p>Understand your business data and make smarter decisions with AI-powered analytics.</p>
+    </div>
+    <div class="hero-icon">✦</div>
+</section>
+
+<h2 class="section-title">Key Performance Indicators</h2>
+
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <span>Total Sales</span>
+        <h2>{{ total_sales }}</h2>
+        <small>Overall sales revenue</small>
+    </div>
+    <div class="kpi-card">
+        <span>Total Profit</span>
+        <h2>{{ total_profit }}</h2>
+        <small>Profit information from dataset</small>
+    </div>
+    <div class="kpi-card">
+        <span>Average Sales</span>
+        <h2>{{ average_sales }}</h2>
+        <small>Average transaction value</small>
+    </div>
+    <div class="kpi-card">
+        <span>Total Customers</span>
+        <h2>{{ total_customers }}</h2>
+        <small>Unique customers</small>
+    </div>
+    <div class="kpi-card">
+        <span>Total Records</span>
+        <h2>{{ rows }}</h2>
+        <small>Dataset rows processed</small>
+    </div>
+    <div class="kpi-card">
+        <span>Churn Risk</span>
+        <h2>{{ churn_percentage }}%</h2>
+        <small>Customers identified as at risk</small>
+    </div>
+</div>
+
+<h2 class="section-title">Business Performance</h2>
+
+<div class="panel-grid">
+    <div class="panel">
+        <h3>Top Product Sales</h3>
+        <div class="chart-area">
+            <canvas id="overviewSalesChart"></canvas>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h3>Customer Segmentation</h3>
+        <div class="chart-area">
+            <canvas id="overviewSegmentChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<h2 class="section-title">AI Business Summary</h2>
+
+<div class="insight-grid">
+    <div class="insight-card">
+        <h3>Sales Forecasting</h3>
+        <p>
+            {% if forecast_error %}
+                Forecast unavailable: {{ forecast_error }}
+            {% else %}
+                Your sales forecasting model generated predictions for the next 30 days.
+            {% endif %}
+        </p>
+        <a href="{{ url_for('forecasting') }}">View Forecast →</a>
+    </div>
+
+    <div class="insight-card">
+        <h3>Customer Segmentation</h3>
+        <p>Customers are grouped based on their purchasing behaviour using K-Means clustering.</p>
+        <a href="{{ url_for('segmentation') }}">View Segments →</a>
+    </div>
+
+    <div class="insight-card">
+        <h3>Churn Prediction</h3>
+        <p>Identify customers who may need additional attention.</p>
+        <a href="{{ url_for('churn') }}">View Churn Analysis →</a>
+    </div>
+</div>
+
+{% if business_recommendations %}
+<h2 class="section-title">Business Recommendations</h2>
+<div class="panel">
+    {% for recommendation in business_recommendations[:3] %}
+        <p>✦ {{ recommendation }}</p>
+    {% endfor %}
+    <a href="{{ url_for('recommendations') }}">View all recommendations →</a>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+const productLabels = {{ chart_labels | tojson }};
+const productValues = {{ chart_values | tojson }};
+const segmentLabels = {{ customer_segments | tojson }};
+const segmentValues = {{ segment_counts | tojson }};
+
+new Chart(document.getElementById('overviewSalesChart'), {
+    type: 'bar',
+    data: {
+        labels: productLabels,
+        datasets: [{
+            label: 'Sales',
+            data: productValues,
+            backgroundColor: '#5B8DEF',
+            borderRadius: 7
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
+new Chart(document.getElementById('overviewSegmentChart'), {
+    type: 'doughnut',
+    data: {
+        labels: segmentLabels,
+        datasets: [{
+            data: segmentValues,
+            backgroundColor: ['#A78BFA', '#38BDF8', '#34D399', '#FBBF24', '#FB7185']
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+</script>
+{% endblock %}

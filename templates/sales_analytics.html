@@ -1,0 +1,92 @@
+
+{% extends "base.html" %}
+{% block title %}Sales Analytics | Enterprise AI{% endblock %}
+{% block body_class %}theme-sales{% endblock %}
+{% block page_heading %}Sales Analytics{% endblock %}
+{% block page_subtitle %}Explore sales performance across products and regions{% endblock %}
+
+{% block content %}
+
+<section class="hero-banner">
+    <div>
+        <h2>Understand Your Sales</h2>
+        <p>Explore product performance and identify important sales patterns.</p>
+    </div>
+    <div class="hero-icon">↗</div>
+</section>
+
+<div class="panel-grid">
+    <div class="panel">
+        <h3>Product-wise Sales</h3>
+        <div class="chart-area">
+            <canvas id="productSalesChart"></canvas>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h3>Category-wise Sales</h3>
+        <div class="chart-area">
+            <canvas id="categorySalesChart"></canvas>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h3>Region-wise Sales</h3>
+        <div class="chart-area">
+            <canvas id="regionSalesChart"></canvas>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+const productLabels = {{ chart_labels | tojson }};
+const productValues = {{ chart_values | tojson }};
+const categoryLabels = {{ category_labels | tojson }};
+const categoryValues = {{ category_values | tojson }};
+const regionLabels = {{ region_labels | tojson }};
+const regionValues = {{ region_values | tojson }};
+
+new Chart(document.getElementById('productSalesChart'), {
+    type: 'bar',
+    data: {
+        labels: productLabels,
+        datasets: [{
+            label: 'Sales',
+            data: productValues,
+            backgroundColor: '#F59E0B',
+            borderRadius: 6
+        }]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+});
+
+new Chart(document.getElementById('categorySalesChart'), {
+    type: 'doughnut',
+    data: {
+        labels: categoryLabels,
+        datasets: [{
+            data: categoryValues,
+            backgroundColor: ['#FB7185', '#A78BFA', '#38BDF8', '#34D399']
+        }]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+});
+
+new Chart(document.getElementById('regionSalesChart'), {
+    type: 'bar',
+    data: {
+        labels: regionLabels,
+        datasets: [{
+            label: 'Regional Sales',
+            data: regionValues,
+            backgroundColor: '#14B8A6',
+            borderRadius: 6
+        }]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,877 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Enterprise AI Business Intelligence Platform</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #253047;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px 35px;
+        }
+
+        header h1 {
+            font-size: 25px;
+            margin-bottom: 7px;
+        }
+
+        header p {
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            padding: 25px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .top-bar h2 {
+            font-size: 23px;
+        }
+
+        .upload-btn,
+        .download-btn {
+            display: inline-block;
+            padding: 11px 17px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 14px;
+            border: none;
+        }
+
+        .download-btn {
+            background: #15803d;
+        }
+
+        .upload-btn:hover,
+        .download-btn:hover {
+            opacity: 0.85;
+        }
+
+        .section {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section h2 {
+            font-size: 20px;
+            margin-bottom: 18px;
+            color: #172554;
+        }
+
+        .section-description {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: -10px;
+            margin-bottom: 18px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 22px;
+            border-radius: 11px;
+            border-left: 5px solid #2563eb;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .kpi-card h3 {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .kpi-card p {
+            font-size: 25px;
+            font-weight: bold;
+            color: #172554;
+            overflow-wrap: anywhere;
+        }
+
+        .cleaning-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 15px;
+        }
+
+        .cleaning-card {
+            background: #f1f5f9;
+            padding: 17px;
+            border-radius: 9px;
+        }
+
+        .cleaning-card h3 {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        .cleaning-card p {
+            font-size: 23px;
+            font-weight: bold;
+            color: #172554;
+        }
+
+        .cleaning-actions {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .success-text {
+            color: #15803d;
+            font-size: 13px;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-box {
+            min-width: 0;
+            height: 340px;
+            position: relative;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+        }
+
+        th {
+            background: #eff4ff;
+            color: #172554;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .recommendation {
+            background: #f1f5f9;
+            border-left: 4px solid #2563eb;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .error-message {
+            background: #fff1f2;
+            color: #be123c;
+            padding: 13px;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .empty-message {
+            color: #64748b;
+            padding: 15px 0;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 16px;
+            }
+
+            .chart-box {
+                height: 280px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Enterprise AI Business Intelligence Platform</h1>
+    <p>AI-Powered Business Analytics, Forecasting and Decision Support System</p>
+</header>
+
+<div class="container">
+
+    <div class="top-bar">
+        <div>
+            <h2>Business Analytics Dashboard</h2>
+            <p style="color:#64748b; margin-top:6px;">
+                Analyze your business performance and make better decisions.
+            </p>
+        </div>
+
+        <a href="/" class="upload-btn">Upload Another Dataset</a>
+    </div>
+
+
+    <!-- BUSINESS ANALYTICS KPIs -->
+
+    <div class="kpi-grid">
+
+        <div class="kpi-card">
+            <h3>Total Sales</h3>
+            <p>₹{{ total_sales }}</p>
+        </div>
+
+        <div class="kpi-card">
+            <h3>Total Profit</h3>
+            <p>₹{{ total_profit }}</p>
+        </div>
+
+        <div class="kpi-card">
+            <h3>Average Sales</h3>
+            <p>₹{{ average_sales }}</p>
+        </div>
+
+        <div class="kpi-card">
+            <h3>Total Records</h3>
+            <p>{{ rows }}</p>
+        </div>
+
+        <div class="kpi-card">
+            <h3>Total Columns</h3>
+            <p>{{ columns|length }}</p>
+        </div>
+
+    </div>
+
+
+    <!-- AUTOMATIC DATA CLEANING -->
+
+    <div class="section">
+
+        <h2>Automatic Data Cleaning</h2>
+
+        <p class="section-description">
+            Your uploaded dataset is automatically processed before business analysis.
+        </p>
+
+        <div class="cleaning-grid">
+
+            <div class="cleaning-card">
+                <h3>Original Rows</h3>
+                <p>{{ cleaning_report.original_rows }}</p>
+            </div>
+
+            <div class="cleaning-card">
+                <h3>Cleaned Rows</h3>
+                <p>{{ cleaning_report.cleaned_rows }}</p>
+            </div>
+
+            <div class="cleaning-card">
+                <h3>Duplicates Removed</h3>
+                <p>{{ cleaning_report.duplicates_removed }}</p>
+            </div>
+
+            <div class="cleaning-card">
+                <h3>Numeric Missing Values Filled</h3>
+                <p>{{ cleaning_report.missing_numeric_filled }}</p>
+            </div>
+
+            <div class="cleaning-card">
+                <h3>Text Missing Values Filled</h3>
+                <p>{{ cleaning_report.missing_text_filled }}</p>
+            </div>
+
+            <div class="cleaning-card">
+                <h3>Original Columns</h3>
+                <p>{{ cleaning_report.original_columns }}</p>
+            </div>
+
+            <div class="cleaning-card">
+                <h3>Cleaned Columns</h3>
+                <p>{{ cleaning_report.cleaned_columns }}</p>
+            </div>
+
+            <div class="cleaning-card">
+                <h3>Invalid Order Dates</h3>
+                <p>{{ cleaning_report.invalid_order_dates }}</p>
+            </div>
+
+            <div class="cleaning-card">
+                <h3>Invalid Ship Dates</h3>
+                <p>{{ cleaning_report.invalid_ship_dates }}</p>
+            </div>
+
+        </div>
+
+        <div class="cleaning-actions">
+
+            <a
+                href="{{ url_for('download_cleaned', filename=cleaned_filename) }}"
+                class="download-btn">
+                Download Cleaned Dataset
+            </a>
+
+            <span class="success-text">
+                Automatic data cleaning completed
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- PRODUCT SALES ANALYSIS -->
+
+    <div class="section">
+
+        <h2>Product-Wise Sales Analysis</h2>
+
+        <p class="section-description">
+            Top 10 products or categories based on sales.
+        </p>
+
+        {% if chart_labels %}
+
+        <div class="chart-box">
+            <canvas id="salesChart"></canvas>
+        </div>
+
+        {% else %}
+
+        <p class="empty-message">
+            Product sales information is not available.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- SALES FORECASTING -->
+
+    <div class="section">
+
+        <h2>AI-Based Sales Forecasting</h2>
+
+        <p class="section-description">
+            Predicted sales for the next 30 days using the trained XGBoost model.
+        </p>
+
+        {% if forecast_error %}
+
+            <div class="error-message">
+                Forecast error: {{ forecast_error }}
+            </div>
+
+        {% elif forecast_labels %}
+
+            <div class="chart-box">
+                <canvas id="forecastChart"></canvas>
+            </div>
+
+        {% else %}
+
+            <p class="empty-message">
+                Sales forecast is not available.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- CUSTOMER SEGMENTATION -->
+
+    <div class="section">
+
+        <h2>Customer Segmentation</h2>
+
+        <p class="section-description">
+            Customers are grouped based on their purchasing behaviour using K-Means clustering.
+        </p>
+
+        {% if segment_counts %}
+
+        <div class="chart-grid">
+
+            <div class="chart-box">
+                <canvas id="segmentChart"></canvas>
+            </div>
+
+            <div>
+                <h3 style="margin-bottom:15px;">Customer Segment Distribution</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer Segment</th>
+                                <th>Number of Customers</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for name, count in segment_counts.items() %}
+                            <tr>
+                                <td>{{ name }}</td>
+                                <td>{{ count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <p class="empty-message">
+            Customer segmentation is not available. Upload a dataset with at least three unique customers.
+        </p>
+
+        {% endif %}
+
+
+        {% if customer_segments %}
+
+        <h3 style="margin:25px 0 15px;">Customer Segmentation Details</h3>
+
+        <div class="table-container">
+            <table>
+
+                <thead>
+                    <tr>
+                        {% for key in customer_segments[0].keys() %}
+                        <th>{{ key|replace("_", " ")|title }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for customer in customer_segments %}
+                    <tr>
+                        {% for value in customer.values() %}
+                        <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- CUSTOMER CHURN PREDICTION -->
+
+    <div class="section">
+
+        <h2>Customer Churn Prediction</h2>
+
+        <p class="section-description">
+            Random Forest model identifies customers who may be at risk of leaving.
+        </p>
+
+        {% if churn_error %}
+
+            <div class="error-message">
+                Churn prediction error: {{ churn_error }}
+            </div>
+
+        {% else %}
+
+            <div class="kpi-grid">
+
+                <div class="kpi-card">
+                    <h3>Total Customers</h3>
+                    <p>{{ total_customers }}</p>
+                </div>
+
+                <div class="kpi-card">
+                    <h3>At-Risk Customers</h3>
+                    <p>{{ at_risk_customers }}</p>
+                </div>
+
+                <div class="kpi-card">
+                    <h3>Active Customers</h3>
+                    <p>{{ active_customers }}</p>
+                </div>
+
+                <div class="kpi-card">
+                    <h3>At-Risk Percentage</h3>
+                    <p>{{ churn_percentage }}%</p>
+                </div>
+
+            </div>
+
+            {% if total_customers > 0 %}
+
+            <div class="chart-box">
+                <canvas id="churnChart"></canvas>
+            </div>
+
+            {% endif %}
+
+            {% if churn_customers %}
+
+            <h3 style="margin:25px 0 15px;">
+                Top 10 Customers by Churn Probability
+            </h3>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Churn Probability</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for customer in churn_customers %}
+
+                        <tr>
+                            <td>{{ customer.customer_name }}</td>
+                            <td>{{ customer.churn_probability }}%</td>
+                            <td>{{ customer.churn_status }}</td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- BUSINESS RECOMMENDATIONS -->
+
+    <div class="section">
+
+        <h2>AI Business Recommendations</h2>
+
+        <p class="section-description">
+            Data-driven suggestions based on the uploaded business dataset.
+        </p>
+
+        {% if recommendation_error %}
+
+            <div class="error-message">
+                Recommendation error: {{ recommendation_error }}
+            </div>
+
+        {% elif business_recommendations %}
+
+            {% for recommendation in business_recommendations %}
+
+                <div class="recommendation">
+                    {{ recommendation }}
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p class="empty-message">
+                No business recommendations are available.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- DATASET PREVIEW -->
+
+    <div class="section">
+
+        <h2>Cleaned Dataset Preview</h2>
+
+        <p class="section-description">
+            First 10 records from your automatically cleaned dataset.
+        </p>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        {% for column in columns %}
+                        <th>{{ column }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for record in records %}
+
+                    <tr>
+
+                        {% for column in columns %}
+
+                        <td>{{ record.get(column, "") }}</td>
+
+                        {% endfor %}
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer>
+    Enterprise AI Business Intelligence Platform
+    <br>
+    AI-Powered Business Analytics and Decision Support System
+</footer>
+
+
+<!-- CHART.JS -->
+
+<script>
+
+    // Product Sales Chart
+
+    {% if chart_labels %}
+
+    new Chart(document.getElementById("salesChart"), {
+
+        type: "bar",
+
+        data: {
+            labels: {{ chart_labels | tojson }},
+
+            datasets: [{
+                label: "Sales",
+                data: {{ chart_values | tojson }},
+                backgroundColor: "#3b82f6",
+                borderRadius: 6
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+
+    });
+
+    {% endif %}
+
+
+    // Sales Forecasting Chart
+
+    {% if forecast_labels %}
+
+    new Chart(document.getElementById("forecastChart"), {
+
+        type: "line",
+
+        data: {
+            labels: {{ forecast_labels | tojson }},
+
+            datasets: [{
+                label: "Predicted Sales",
+                data: {{ forecast_values | tojson }},
+                borderColor: "#16a34a",
+                backgroundColor: "rgba(22,163,74,0.12)",
+                fill: true,
+                tension: 0.3
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+
+    });
+
+    {% endif %}
+
+
+    // Customer Segmentation Chart
+
+    {% if segment_counts %}
+
+    new Chart(document.getElementById("segmentChart"), {
+
+        type: "doughnut",
+
+        data: {
+            labels: {{ segment_counts.keys() | list | tojson }},
+
+            datasets: [{
+                data: {{ segment_counts.values() | list | tojson }},
+                backgroundColor: [
+                    "#2563eb",
+                    "#16a34a",
+                    "#f59e0b",
+                    "#9333ea",
+                    "#0891b2"
+                ]
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+
+    });
+
+    {% endif %}
+
+
+    // Customer Churn Chart
+
+    {% if not churn_error and total_customers > 0 %}
+
+    new Chart(document.getElementById("churnChart"), {
+
+        type: "doughnut",
+
+        data: {
+            labels: ["At Risk Customers", "Active Customers"],
+
+            datasets: [{
+                data: [
+                    {{ at_risk_customers }},
+                    {{ active_customers }}
+                ],
+
+                backgroundColor: [
+                    "#ef4444",
+                    "#16a34a"
+                ]
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+
+    });
+
+    {% endif %}
+
+</script>
+
+</body>
+</html>
+
+
+
