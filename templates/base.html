@@ -102,6 +102,55 @@
             {% block content %}
             {% endblock %}
 
+            {% set workflow_pages = [
+                ('overview', 'Overview'),
+                ('data_cleaning', 'Data Cleaning'),
+                ('sales_analytics', 'Sales Analytics'),
+                ('forecasting', 'Sales Forecasting'),
+                ('segmentation', 'Customer Segmentation'),
+                ('churn', 'Churn Prediction'),
+                ('recommendations', 'Recommendations')
+            ] %}
+
+            {% set current = namespace(index=-1) %}
+
+            {% for page in workflow_pages %}
+                {% if request.endpoint == page[0] %}
+                    {% set current.index = loop.index0 %}
+                {% endif %}
+            {% endfor %}
+
+            {% if current.index != -1 %}
+            <div class="page-navigation">
+
+                {% if current.index > 0 %}
+                    <a class="page-nav-btn previous-btn"
+                       href="{{ url_for(workflow_pages[current.index - 1][0]) }}">
+                        ← Previous
+                    </a>
+                {% else %}
+                    <span></span>
+                {% endif %}
+
+                <span class="page-progress">
+                    Step {{ current.index + 1 }} of {{ workflow_pages|length }}
+                </span>
+
+                {% if current.index < workflow_pages|length - 1 %}
+                    <a class="page-nav-btn next-btn"
+                       href="{{ url_for(workflow_pages[current.index + 1][0]) }}">
+                        Next →
+                    </a>
+                {% else %}
+                    <a class="page-nav-btn next-btn"
+                       href="{{ url_for('overview') }}">
+                        Finish ✓
+                    </a>
+                {% endif %}
+
+            </div>
+            {% endif %}
+
         </section>
 
         <footer class="footer">
