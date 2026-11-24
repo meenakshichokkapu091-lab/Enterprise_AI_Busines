@@ -1,121 +1,305 @@
 
 {% extends "base.html" %}
-{% block title %}Churn Prediction | Enterprise AI{% endblock %}
-{% block body_class %}theme-churn{% endblock %}
-{% block page_heading %}Customer Churn Prediction{% endblock %}
-{% block page_subtitle %}Identify customers who may stop purchasing{% endblock %}
+
+{% block title %}Churn Prediction{% endblock %}
 
 {% block content %}
 
-<section class="hero-banner">
-    <div>
-        <h2>Retain Your Customers</h2>
-        <p>Machine learning helps identify customers who may need attention.</p>
-    </div>
-    <div class="hero-icon">♡</div>
-</section>
+<style>
+.churn-section {
+    padding: 20px;
+}
 
-{% if churn_error %}
-<div class="panel">
-    <h3>Churn Prediction Unavailable</h3>
-    <p>{{ churn_error }}</p>
-</div>
-{% else %}
+.churn-header {
+    margin-bottom: 25px;
+}
 
-<div class="kpi-grid">
-    <div class="kpi-card">
-        <span>Total Customers</span>
-        <h2>{{ total_customers }}</h2>
-    </div>
-    <div class="kpi-card">
-        <span>At-risk Customers</span>
-        <h2>{{ at_risk_customers }}</h2>
-    </div>
-    <div class="kpi-card">
-        <span>Active Customers</span>
-        <h2>{{ active_customers }}</h2>
-    </div>
-    <div class="kpi-card">
-        <span>Churn Risk</span>
-        <h2>{{ churn_percentage }}%</h2>
-    </div>
-</div>
+.churn-header h2 {
+    font-size: 26px;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
 
-<div class="panel-grid">
-    <div class="panel">
-        <h3>Customer Risk Distribution</h3>
-        <div class="chart-area">
-            <canvas id="churnChart"></canvas>
+.churn-header p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.churn-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.churn-kpi-card {
+    background: #ffffff;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+    border: 1px solid #edf0f5;
+}
+
+.churn-kpi-card h4 {
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.churn-kpi-card p {
+    font-size: 27px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.churn-content-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.churn-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    min-width: 0;
+}
+
+.churn-card h3 {
+    color: #1e293b;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.churn-chart-container {
+    height: 300px;
+    max-width: 420px;
+    margin: auto;
+    position: relative;
+}
+
+.churn-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.churn-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 550px;
+}
+
+.churn-table th,
+.churn-table td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14px;
+}
+
+.churn-table th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+}
+
+.churn-table td {
+    color: #334155;
+}
+
+.risk-badge {
+    display: inline-block;
+    padding: 5px 11px;
+    border-radius: 20px;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.active-badge {
+    display: inline-block;
+    padding: 5px 11px;
+    border-radius: 20px;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.churn-note {
+    color: #64748b;
+    font-size: 13px;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+
+@media(max-width: 800px) {
+    .churn-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .churn-section {
+        padding: 12px;
+    }
+}
+</style>
+
+<section class="churn-section">
+
+    <div class="churn-header">
+        <h2>Customer Churn Prediction</h2>
+        <p>Identify customers who may stop purchasing and understand customer retention.</p>
+    </div>
+
+    <div class="churn-kpi-grid">
+
+        <div class="churn-kpi-card">
+            <h4>Total Customers</h4>
+            <p>{{ total_customers | default(0) }}</p>
+        </div>
+
+        <div class="churn-kpi-card">
+            <h4>At-Risk Customers</h4>
+            <p>{{ at_risk_customers | default(0) }}</p>
+        </div>
+
+        <div class="churn-kpi-card">
+            <h4>Active Customers</h4>
+            <p>{{ active_customers | default(0) }}</p>
+        </div>
+
+        <div class="churn-kpi-card">
+            <h4>Churn Percentage</h4>
+            <p>{{ "%.1f"|format(churn_percentage | default(0) | float) }}%</p>
+        </div>
+
+    </div>
+
+    {% if churn_error %}
+
+        <div class="churn-card">
+            <h3>Churn Prediction Unavailable</h3>
+            <p>{{ churn_error }}</p>
+        </div>
+
+    {% else %}
+
+    <div class="churn-content-grid">
+
+        <div class="churn-card">
+            <h3>Customer Churn Distribution</h3>
+            <div class="churn-chart-container">
+                <canvas id="churnChart"></canvas>
+            </div>
+        </div>
+
+        <div class="churn-card">
+            <h3>Customer Retention Overview</h3>
+
+            <p style="margin-bottom:15px;color:#64748b;">
+                Customers identified as at risk:
+            </p>
+
+            <h2 style="font-size:32px;color:#dc2626;margin-bottom:20px;">
+                {{ at_risk_customers | default(0) }}
+            </h2>
+
+            <p style="color:#64748b;margin-bottom:10px;">
+                Active customers:
+            </p>
+
+            <h2 style="font-size:32px;color:#16a34a;">
+                {{ active_customers | default(0) }}
+            </h2>
+
+            <p class="churn-note">
+                These predictions are model-based estimates. They should be used
+                to identify customers who may need retention attention.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="churn-card">
+        <h3>At-Risk Customer Overview</h3>
+
+        <div class="churn-table-wrapper">
+            <table class="churn-table">
+                <thead>
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>Total Spend</th>
+                        <th>Purchase Frequency</th>
+                        <th>Churn Probability</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for customer in churn_customers %}
+                    {% if customer.churn_status == "At Risk" %}
+                    <tr>
+                        <td>{{ customer.customer_id }}</td>
+                        <td>{{ "%.2f"|format(customer.total_spend|float) }}</td>
+                        <td>{{ customer.purchase_frequency }}</td>
+                        <td>{{ "%.1f"|format(customer.churn_probability|float) }}%</td>
+                        <td><span class="risk-badge">At Risk</span></td>
+                    </tr>
+                    {% endif %}
+                    {% else %}
+                    <tr>
+                        <td colspan="5">No customer prediction data available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <div class="panel">
-        <h3>Understanding Churn Prediction</h3>
-        <p>The model analyses customer purchasing behaviour to estimate churn risk.</p>
-        <p><strong>Model:</strong> Random Forest Classifier</p>
-        <p><strong>Inputs:</strong> Total spend, purchase frequency and average order value.</p>
-        <p><strong>Note:</strong> This project uses inactivity as a proxy for churn, not confirmed future customer loss.</p>
-    </div>
-</div>
+    {% endif %}
 
-<h2 class="section-title">Customer Risk Details</h2>
+</section>
 
-<div class="panel">
-    <div class="panel-header">
-        <h3>Customer Predictions</h3>
-        <input type="text" id="churnSearch" placeholder="Search customers..."
-               onkeyup="searchTable('churnSearch','churnTable')">
-    </div>
-
-    <div class="table-wrap">
-        <table id="churnTable">
-            <thead>
-                <tr>
-                    <th>Customer</th>
-                    <th>Total Spend</th>
-                    <th>Purchase Frequency</th>
-                    <th>Average Order Value</th>
-                    <th>Churn Probability</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for customer in churn_customers %}
-                <tr>
-                    <td>{{ customer.get('customer_name', '') }}</td>
-                    <td>{{ customer.get('total_spend', '') }}</td>
-                    <td>{{ customer.get('purchase_frequency', '') }}</td>
-                    <td>{{ customer.get('average_order_value', '') }}</td>
-                    <td>{{ customer.get('churn_probability', '') }}</td>
-                    <td>{{ customer.get('churn_status', '') }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-
-{% endif %}
-
-{% endblock %}
-
-{% block scripts %}
 {% if not churn_error %}
 <script>
-const atRisk = {{ at_risk_customers | tojson }};
-const active = {{ active_customers | tojson }};
+document.addEventListener("DOMContentLoaded", function () {
 
-new Chart(document.getElementById('churnChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ['At Risk', 'Active'],
-        datasets: [{
-            data: [atRisk, active],
-            backgroundColor: ['#F87171', '#34D399']
-        }]
-    },
-    options: { responsive: true, maintainAspectRatio: false }
+    const atRisk = Number({{ at_risk_customers | default(0) | tojson }});
+    const active = Number({{ active_customers | default(0) | tojson }});
+
+    const canvas = document.getElementById("churnChart");
+
+    if (canvas && typeof Chart !== "undefined") {
+        new Chart(canvas, {
+            type: "doughnut",
+            data: {
+                labels: ["At Risk", "Active"],
+                datasets: [{
+                    data: [atRisk, active],
+                    backgroundColor: ["#ef4444", "#22c55e"],
+                    borderColor: "#ffffff",
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }
+        });
+    }
+
 });
 </script>
 {% endif %}
+
 {% endblock %}
