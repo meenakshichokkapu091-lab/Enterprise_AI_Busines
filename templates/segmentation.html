@@ -1,89 +1,182 @@
 
 {% extends "base.html" %}
-{% block title %}Customer Segmentation | Enterprise AI{% endblock %}
-{% block body_class %}theme-segmentation{% endblock %}
-{% block page_heading %}Customer Segmentation{% endblock %}
-{% block page_subtitle %}Group customers based on their purchasing behaviour{% endblock %}
+
+{% block title %}Customer Segmentation{% endblock %}
 
 {% block content %}
 
-<section class="hero-banner">
-    <div>
-        <h2>Know Your Customers</h2>
-        <p>K-Means clustering helps identify groups of customers with similar buying patterns.</p>
-    </div>
-    <div class="hero-icon">◎</div>
-</section>
+<style>
+.segmentation-section {
+    padding: 20px;
+}
 
-<div class="panel-grid">
-    <div class="panel">
+.section-header {
+    margin-bottom: 25px;
+}
+
+.section-header h2 {
+    font-size: 26px;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.section-header p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.segmentation-chart-card,
+.segment-summary {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+
+.segmentation-chart-card h3,
+.segment-summary h3 {
+    font-size: 18px;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 350px;
+    margin: auto;
+}
+
+.segment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+}
+
+.segment-card {
+    padding: 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.segment-card h4 {
+    color: #334155;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.segment-card p {
+    color: #2563eb;
+    font-size: 23px;
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .segmentation-section {
+        padding: 12px;
+    }
+
+    .chart-container {
+        height: 280px;
+    }
+}
+</style>
+
+<section class="segmentation-section">
+
+    <div class="section-header">
+        <h2>Customer Segmentation</h2>
+        <p>Understand your customer groups based on their purchasing behaviour.</p>
+    </div>
+
+    <div class="segmentation-chart-card">
         <h3>Customer Segment Distribution</h3>
-        <div class="chart-area">
-            <canvas id="segmentDistributionChart"></canvas>
+
+        <div class="chart-container">
+            <canvas id="segmentationChart"></canvas>
         </div>
     </div>
 
-    <div class="panel">
-        <h3>About K-Means</h3>
-        <p>Customers are grouped using purchasing information such as total spending, purchase frequency and recent activity.</p>
-        <p><strong>Algorithm:</strong> K-Means Clustering</p>
-        <p><strong>Purpose:</strong> Identify customer groups for better business decisions.</p>
-    </div>
-</div>
-
-<h2 class="section-title">Customer Details</h2>
-
-<div class="panel">
-    <div class="panel-header">
-        <h3>Segmented Customers</h3>
-        <input type="text" id="segmentSearch" placeholder="Search customers..."
-               onkeyup="searchTable('segmentSearch','segmentTable')">
+    <div class="segment-summary">
+        <h3>Segment Overview</h3>
+        <div id="segmentSummary" class="segment-grid"></div>
     </div>
 
-    <div class="table-wrap">
-        <table id="segmentTable">
-            <thead>
-                <tr>
-                    <th>Customer ID</th>
-                    <th>Total Spend</th>
-                    <th>Purchase Frequency</th>
-                    <th>Days Inactive</th>
-                    <th>Customer Segment</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for customer in segmentation_records %}
-                <tr>
-                    <td>{{ customer.get('customer_id', '') }}</td>
-                    <td>{{ customer.get('total_spend', '') }}</td>
-                    <td>{{ customer.get('purchase_frequency', '') }}</td>
-                    <td>{{ customer.get('days_since_last_purchase', '') }}</td>
-                    <td>{{ customer.get('segment_name', '') }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+</section>
 
-{% endblock %}
-
-{% block scripts %}
 <script>
-const segmentLabels = {{ customer_segments | tojson }};
-const segmentValues = {{ segment_counts | tojson }};
+document.addEventListener("DOMContentLoaded", function () {
 
-new Chart(document.getElementById('segmentDistributionChart'), {
-    type: 'pie',
-    data: {
-        labels: segmentLabels,
-        datasets: [{
-            data: segmentValues,
-            backgroundColor: ['#A78BFA', '#38BDF8', '#34D399', '#FBBF24', '#FB7185']
-        }]
-    },
-    options: { responsive: true, maintainAspectRatio: false }
+    const segments = {{ customer_segments | default([], true) | tojson }};
+    const counts = {{ segment_counts | default([], true) | tojson }};
+
+    const labels = segments.map(item =>
+        typeof item === "object" ? item.segment : item
+    );
+
+    const values = counts.map(item =>
+        typeof item === "object" ? item.count : item
+    );
+
+    const summary = document.getElementById("segmentSummary");
+
+    if (labels.length === 0 || values.length === 0) {
+        summary.textContent = "No customer segmentation data available. Please upload a suitable dataset.";
+        return;
+    }
+
+    const canvas = document.getElementById("segmentationChart");
+
+    if (typeof Chart !== "undefined") {
+        new Chart(canvas, {
+            type: "pie",
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: [
+                        "#2563eb",
+                        "#14b8a6",
+                        "#f59e0b",
+                        "#8b5cf6",
+                        "#ec4899"
+                    ],
+                    borderColor: "#ffffff",
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }
+        });
+    }
+
+    labels.forEach((label, index) => {
+        const card = document.createElement("div");
+        card.className = "segment-card";
+
+        const heading = document.createElement("h4");
+        heading.textContent = label;
+
+        const count = document.createElement("p");
+        count.textContent = values[index] + " Customers";
+
+        card.appendChild(heading);
+        card.appendChild(count);
+
+        summary.appendChild(card);
+    });
+
 });
 </script>
-{% endblock %}
 
+{% endblock %}
