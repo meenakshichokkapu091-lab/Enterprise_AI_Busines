@@ -73,18 +73,13 @@ def load_ml_models():
     # Sales forecasting model
     try:
         if os.path.isfile(SALES_MODEL_PATH):
-
             model = xgb.XGBRegressor()
             model.load_model(SALES_MODEL_PATH)
-
             sales_model = model
-
             print("SUCCESS: Sales forecasting model loaded.")
-
         else:
             sales_model = None
             print("WARNING: Sales forecasting model file not found.")
-            print("Expected location:", SALES_MODEL_PATH)
 
     except Exception as error:
         sales_model = None
@@ -221,7 +216,7 @@ def make_json_safe(value):
     if value is None:
         return ""
 
-    if isinstance(value, (pd.Timestamp,)):
+    if isinstance(value, pd.Timestamp):
         return value.strftime("%Y-%m-%d")
 
     if isinstance(value, (np.integer,)):
@@ -274,7 +269,6 @@ def get_numeric_series(data, column):
         values.dtype == "object"
         or pd.api.types.is_string_dtype(values)
     ):
-
         values = (
             values.astype(str)
             .str.replace(r"[₹$€£,%]", "", regex=True)
@@ -317,7 +311,6 @@ def read_uploaded_dataset(file_path, extension):
         for separator in separators:
 
             try:
-
                 data = pd.read_csv(
                     file_path,
                     encoding=encoding,
@@ -475,18 +468,31 @@ def generate_churn_predictions(data):
         working[date_column], errors="coerce"
     )
 
-    latest_date = working[date_column].max()
+    # Remove records without customer or valid purchase date
+    working = working.dropna(
+        subset=[customer_column, date_column]
+    )
 
-    if pd.isna(latest_date):
+    if working.empty:
         raise ValueError(
-            "Valid customer purchase dates are required."
+            "No valid customer records found."
         )
 
-    customer_data = working.groupby(customer_column).agg(
+    # Create one record for each customer
+    customer_data = working.groupby(
+        customer_column
+    ).agg(
         total_spend=(sales_column, "sum"),
         purchase_frequency=(order_column, "nunique"),
         last_purchase=(date_column, "max")
     ).reset_index()
+
+    # IMPORTANT: Standardize the customer column name
+    customer_data = customer_data.rename(
+        columns={
+            customer_column: "customer_id"
+        }
+    )
 
     customer_data["average_order_value"] = (
         customer_data["total_spend"]
@@ -510,7 +516,10 @@ def generate_churn_predictions(data):
 
     scaled_input = churn_scaler.transform(churn_input)
 
-    probabilities = churn_model.predict_proba(scaled_input)
+    probabilities = churn_model.predict_proba(
+        scaled_input
+    )
+
     classes = list(churn_model.classes_)
 
     if 1 not in classes:
@@ -542,7 +551,9 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
     data = dataframe.copy()
 
     if data.empty:
-        raise ValueError("No records available for analysis.")
+        raise ValueError(
+            "No records available for analysis."
+        )
 
     sales_column = find_column(data, "sales")
     profit_column = find_column(data, "profit")
@@ -566,11 +577,15 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
             data, metric_column
         ).dropna()
 
-        metric_total = format_currency(metric_values.sum())
-        metric_average = format_currency(metric_values.mean())
+        metric_total = format_currency(
+            metric_values.sum()
+        )
+
+        metric_average = format_currency(
+            metric_values.mean()
+        )
 
     else:
-
         metric_total = "Not Available"
         metric_average = "Not Available"
 
@@ -618,7 +633,9 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
 
     if metric_column and chart_category:
 
-        temp = data[[chart_category, metric_column]].copy()
+        temp = data[
+            [chart_category, metric_column]
+        ].copy()
 
         temp[metric_column] = get_numeric_series(
             temp, metric_column
@@ -632,8 +649,14 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
             .head(10)
         )
 
-        chart_labels = [str(x) for x in grouped.index]
-        chart_values = [round(float(x), 2) for x in grouped.values]
+        chart_labels = [
+            str(value) for value in grouped.index
+        ]
+
+        chart_values = [
+            round(float(value), 2)
+            for value in grouped.values
+        ]
 
     # Category chart
     category_labels = []
@@ -641,7 +664,9 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
 
     if metric_column and category_column:
 
-        temp = data[[category_column, metric_column]].copy()
+        temp = data[
+            [category_column, metric_column]
+        ].copy()
 
         temp[metric_column] = get_numeric_series(
             temp, metric_column
@@ -654,8 +679,14 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
             .sort_values(ascending=False)
         )
 
-        category_labels = [str(x) for x in grouped.index]
-        category_values = [round(float(x), 2) for x in grouped.values]
+        category_labels = [
+            str(value) for value in grouped.index
+        ]
+
+        category_values = [
+            round(float(value), 2)
+            for value in grouped.values
+        ]
 
     # Region chart
     region_labels = []
@@ -663,7 +694,9 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
 
     if metric_column and region_column:
 
-        temp = data[[region_column, metric_column]].copy()
+        temp = data[
+            [region_column, metric_column]
+        ].copy()
 
         temp[metric_column] = get_numeric_series(
             temp, metric_column
@@ -676,10 +709,19 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
             .sort_values(ascending=False)
         )
 
-        region_labels = [str(x) for x in grouped.index]
-        region_values = [round(float(x), 2) for x in grouped.values]
+        region_labels = [
+            str(value) for value in grouped.index
+        ]
 
-    # Segmentation
+        region_values = [
+            round(float(value), 2)
+            for value in grouped.values
+        ]
+
+    # --------------------------------------------------
+    # SEGMENTATION
+    # --------------------------------------------------
+
     segmentation_records = []
     customer_segments = []
     segment_counts = []
@@ -697,21 +739,28 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
         )
 
         customer_segments = [
-            str(value) for value in segment_distribution.index
+            str(value)
+            for value in segment_distribution.index
         ]
 
         segment_counts = [
-            int(value) for value in segment_distribution.values
+            int(value)
+            for value in segment_distribution.values
         ]
 
-        segmentation_records = dataframe_records(customer_data)
+        segmentation_records = dataframe_records(
+            customer_data
+        )
 
     except Exception as error:
 
         segmentation_error = str(error)
         print("Segmentation error:", error)
 
-    # Forecasting
+    # --------------------------------------------------
+    # FORECASTING
+    # --------------------------------------------------
+
     forecast_labels = []
     forecast_values = []
     forecast_error = None
@@ -729,8 +778,12 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
                 "No suitable date column detected."
             )
 
-        forecast_labels, forecast_values = generate_sales_forecast(
-            data, date_column, sales_column
+        forecast_labels, forecast_values = (
+            generate_sales_forecast(
+                data,
+                date_column,
+                sales_column
+            )
         )
 
     except Exception as error:
@@ -738,7 +791,10 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
         forecast_error = str(error)
         print("Forecast error:", error)
 
-    # Churn
+    # --------------------------------------------------
+    # CHURN
+    # --------------------------------------------------
+
     churn_customers = []
     at_risk_customers = 0
     active_customers = 0
@@ -750,42 +806,79 @@ def analyse_dataset(dataframe, cleaning_report, cleaned_filename):
         churn_results = generate_churn_predictions(data)
 
         at_risk_customers = int(
-            (churn_results["churn_status"] == "At Risk").sum()
+            (
+                churn_results["churn_status"] == "At Risk"
+            ).sum()
         )
 
         active_customers = int(
-            (churn_results["churn_status"] == "Active").sum()
+            (
+                churn_results["churn_status"] == "Active"
+            ).sum()
         )
 
         if len(churn_results) > 0:
             churn_percentage = round(
-                at_risk_customers / len(churn_results) * 100, 2
+                at_risk_customers / len(churn_results) * 100,
+                2
             )
 
         churn_results = churn_results.sort_values(
-            "churn_probability", ascending=False
+            "churn_probability",
+            ascending=False
         )
 
-        churn_customers = dataframe_records(churn_results)
+        churn_customers = dataframe_records(
+            churn_results
+        )
+
+        print(
+            "Churn customer count:",
+            len(churn_customers)
+        )
+
+        print(
+            "First churn customer:",
+            churn_customers[0].get("customer_id")
+            if churn_customers else "No customers"
+        )
 
     except Exception as error:
 
         churn_error = str(error)
         print("Churn prediction error:", error)
 
-    # Recommendations
+    # --------------------------------------------------
+    # RECOMMENDATIONS
+    # --------------------------------------------------
+
     recommendation_error = None
 
     try:
-        business_recommendations = generate_recommendations(data)
+
+        business_recommendations = (
+            generate_recommendations(data)
+        )
 
     except Exception as error:
+
         business_recommendations = []
         recommendation_error = str(error)
-        print("Recommendation error:", error)
+
+        print(
+            "Recommendation error:",
+            error
+        )
+
+    # --------------------------------------------------
+    # FINAL DATA
+    # --------------------------------------------------
 
     columns = data.columns.tolist()
-    records = dataframe_records(data.head(10))
+
+    records = dataframe_records(
+        data.head(10)
+    )
 
     return {
 
@@ -858,7 +951,10 @@ def render_analysis_page(template_name):
         flash("Please upload your dataset first.")
         return redirect(url_for("home"))
 
-    return render_template(template_name, **analysis)
+    return render_template(
+        template_name,
+        **analysis
+    )
 
 
 # --------------------------------------------------
@@ -867,6 +963,7 @@ def render_analysis_page(template_name):
 
 @app.route("/")
 def home():
+
     return render_template("upload.html")
 
 
@@ -893,32 +990,49 @@ def upload_file():
 
     try:
 
-        original_filename = secure_filename(file.filename)
+        original_filename = secure_filename(
+            file.filename
+        )
 
         if not original_filename:
-            raise ValueError("Invalid filename.")
+            raise ValueError(
+                "Invalid filename."
+            )
 
-        extension = original_filename.rsplit(".", 1)[1].lower()
+        extension = original_filename.rsplit(
+            ".", 1
+        )[1].lower()
 
-        unique_name = str(uuid.uuid4()) + "." + extension
+        unique_name = (
+            str(uuid.uuid4()) + "." + extension
+        )
 
         file_path = os.path.join(
-            UPLOAD_FOLDER, unique_name
+            UPLOAD_FOLDER,
+            unique_name
         )
 
         file.save(file_path)
 
         original_data = read_uploaded_dataset(
-            file_path, extension
+            file_path,
+            extension
         )
 
         if original_data.empty:
-            raise ValueError("The uploaded dataset is empty.")
+            raise ValueError(
+                "The uploaded dataset is empty."
+            )
 
         if len(original_data.columns) < 1:
-            raise ValueError("No columns found in the dataset.")
+            raise ValueError(
+                "No columns found in the dataset."
+            )
 
-        print("Original columns:", original_data.columns.tolist())
+        print(
+            "Original columns:",
+            original_data.columns.tolist()
+        )
 
         cleaned_data, cleaning_report = clean_dataset(
             original_data.copy()
@@ -929,7 +1043,10 @@ def upload_file():
                 "No records available after data cleaning."
             )
 
-        print("Cleaned columns:", cleaned_data.columns.tolist())
+        print(
+            "Cleaned columns:",
+            cleaned_data.columns.tolist()
+        )
 
         cleaned_filename = (
             "cleaned_"
@@ -938,7 +1055,8 @@ def upload_file():
         )
 
         cleaned_path = os.path.join(
-            UPLOAD_FOLDER, cleaned_filename
+            UPLOAD_FOLDER,
+            cleaned_filename
         )
 
         cleaned_data.to_csv(
@@ -956,21 +1074,31 @@ def upload_file():
         analysis_id = str(uuid.uuid4())
 
         analysis_store[analysis_id] = analysis
+
         session["analysis_id"] = analysis_id
 
-        print("Dataset uploaded and analysed successfully.")
+        print(
+            "Dataset uploaded and analysed successfully."
+        )
 
-        return redirect(url_for("overview"))
+        return redirect(
+            url_for("overview")
+        )
 
     except Exception as error:
 
-        print("Upload error:", repr(error))
+        print(
+            "Upload error:",
+            repr(error)
+        )
 
         flash(
             "Dataset processing failed: " + str(error)
         )
 
-        return redirect(url_for("home"))
+        return redirect(
+            url_for("home")
+        )
 
 
 # --------------------------------------------------
@@ -979,37 +1107,58 @@ def upload_file():
 
 @app.route("/overview")
 def overview():
-    return render_analysis_page("overview.html")
+
+    return render_analysis_page(
+        "overview.html"
+    )
 
 
 @app.route("/data-cleaning")
 def data_cleaning():
-    return render_analysis_page("data_cleaning.html")
+
+    return render_analysis_page(
+        "data_cleaning.html"
+    )
 
 
 @app.route("/sales-analytics")
 def sales_analytics():
-    return render_analysis_page("sales_analytics.html")
+
+    return render_analysis_page(
+        "sales_analytics.html"
+    )
 
 
 @app.route("/forecasting")
 def forecasting():
-    return render_analysis_page("forecasting.html")
+
+    return render_analysis_page(
+        "forecasting.html"
+    )
 
 
 @app.route("/segmentation")
 def segmentation():
-    return render_analysis_page("segmentation.html")
+
+    return render_analysis_page(
+        "segmentation.html"
+    )
 
 
 @app.route("/churn")
 def churn():
-    return render_analysis_page("churn.html")
+
+    return render_analysis_page(
+        "churn.html"
+    )
 
 
 @app.route("/recommendations")
 def recommendations():
-    return render_analysis_page("recommendations.html")
+
+    return render_analysis_page(
+        "recommendations.html"
+    )
 
 
 # --------------------------------------------------
@@ -1019,17 +1168,31 @@ def recommendations():
 @app.route("/download-cleaned/<filename>")
 def download_cleaned(filename):
 
-    safe_filename = secure_filename(filename)
+    safe_filename = secure_filename(
+        filename
+    )
 
     analysis = get_current_analysis()
 
     if analysis is None:
-        flash("Please upload a dataset first.")
-        return redirect(url_for("home"))
+        flash(
+            "Please upload a dataset first."
+        )
 
-    if safe_filename != analysis.get("cleaned_filename"):
-        flash("Invalid download request.")
-        return redirect(url_for("data_cleaning"))
+        return redirect(
+            url_for("home")
+        )
+
+    if safe_filename != analysis.get(
+        "cleaned_filename"
+    ):
+        flash(
+            "Invalid download request."
+        )
+
+        return redirect(
+            url_for("data_cleaning")
+        )
 
     return send_from_directory(
         UPLOAD_FOLDER,
@@ -1049,11 +1212,14 @@ def file_too_large(error):
         "File is too large. Maximum upload size is 50 MB."
     )
 
-    return redirect(url_for("home"))
+    return redirect(
+        url_for("home")
+    )
 
 
 @app.errorhandler(404)
 def page_not_found(error):
+
     return "Page not found.", 404
 
 
@@ -1063,19 +1229,12 @@ def page_not_found(error):
 
 if __name__ == "__main__":
 
-    port = int(os.environ.get("PORT", 5000))
+    port = int(
+        os.environ.get("PORT", 5000)
+    )
 
     app.run(
         host="0.0.0.0",
         port=port,
         debug=False
     )
-
-
-
-
-
-
-
-
-
