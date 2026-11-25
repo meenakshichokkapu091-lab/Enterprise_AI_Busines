@@ -1,131 +1,408 @@
 
 {% extends "base.html" %}
-{% block title %}Recommendations | Enterprise AI{% endblock %}
+
+{% block title %}Business Insights | Enterprise AI{% endblock %}
 {% block body_class %}theme-recommendations{% endblock %}
-{% block page_heading %}AI Business Recommendations{% endblock %}
-{% block page_subtitle %}Turn business data into useful actions{% endblock %}
+{% block page_heading %}Business Insights & Recommendations{% endblock %}
+{% block page_subtitle %}Understand your business data and make better decisions{% endblock %}
 
 {% block content %}
 
-<section class="hero-banner">
+<!-- PAGE INTRO -->
+<section class="recommendation-hero">
     <div>
-        <h2>Make Smarter Business Decisions</h2>
-        <p>Explore recommendations based on your business analytics.</p>
+        <span class="hero-label">DECISION SUPPORT</span>
+        <h2>Turn Your Data Into Better Decisions</h2>
+        <p>
+            Explore important business insights and practical actions
+            based on your uploaded dataset.
+        </p>
     </div>
-    <div class="hero-icon">✧</div>
+    <div class="recommendation-hero-icon">✦</div>
 </section>
 
-{% if recommendation_error %}
-<div class="panel">
-    <h3>Recommendations Unavailable</h3>
-    <p>{{ recommendation_error }}</p>
-</div>
-{% elif business_recommendations %}
+<!-- BUSINESS SUMMARY -->
+<section class="recommendation-summary">
 
-<div class="recommendation-list">
-    {% for recommendation in business_recommendations %}
-    <div class="recommendation-card">
-        <div class="recommendation-number">{{ loop.index }}</div>
+    <div class="summary-card">
+        <div class="summary-icon sales-icon">₹</div>
         <div>
-            <h3>Business Insight {{ loop.index }}</h3>
-            <p>{{ recommendation }}</p>
+            <p>Total Sales</p>
+            <h3>{{ total_sales }}</h3>
+            <span>Based on uploaded data</span>
         </div>
     </div>
-    {% endfor %}
-</div>
 
-{% else %}
-<div class="panel">
-    <h3>No Recommendations Available</h3>
-    <p>Upload a dataset to generate business recommendations.</p>
-</div>
-{% endif %}
+    <div class="summary-card">
+        <div class="summary-icon customer-icon">♙</div>
+        <div>
+            <p>Total Customers</p>
+            <h3>{{ total_customers }}</h3>
+            <span>Unique customers identified</span>
+        </div>
+    </div>
 
-<div class="panel">
-    <h3>How These Recommendations Help</h3>
-    <ul>
-        <li>Understand sales performance.</li>
-        <li>Identify customer behaviour patterns.</li>
-        <li>Find areas that may need improvement.</li>
-        <li>Support better business planning.</li>
-    </ul>
-</div>
+    <div class="summary-card">
+        <div class="summary-icon records-icon">▤</div>
+        <div>
+            <p>Dataset Records</p>
+            <h3>{{ rows }}</h3>
+            <span>Records analysed</span>
+        </div>
+    </div>
+
+</section>
+
+<!-- BUSINESS RECOMMENDATIONS -->
+<section class="recommendations-content">
+
+    <div class="recommendation-heading">
+        <div>
+            <span class="section-eyebrow">ACTION PLAN</span>
+            <h2>Business Recommendations</h2>
+            <p>Suggestions generated from your business data.</p>
+        </div>
+        <div class="recommendation-count">
+            {{ business_recommendations|length }} Insights
+        </div>
+    </div>
+
+    {% if recommendation_error %}
+
+        <div class="recommendation-empty">
+            <h3>Recommendations Unavailable</h3>
+            <p>{{ recommendation_error }}</p>
+        </div>
+
+    {% elif business_recommendations %}
+
+        <div class="recommendation-list">
+
+            {% for recommendation in business_recommendations %}
+
+            <div class="recommendation-item">
+
+                <div class="recommendation-index">
+                    {{ "%02d"|format(loop.index) }}
+                </div>
+
+                <div class="recommendation-details">
+                    <span class="recommendation-tag">
+                        BUSINESS SUGGESTION
+                    </span>
+
+                    <h3>Recommendation {{ loop.index }}</h3>
+
+                    <p>{{ recommendation }}</p>
+
+                    <div class="recommendation-action">
+                        <span>✓</span>
+                        <span>Consider this action while planning your business strategy.</span>
+                    </div>
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="recommendation-empty">
+            <h3>No Recommendations Available</h3>
+            <p>
+                Upload a suitable dataset to generate business recommendations.
+            </p>
+        </div>
+
+    {% endif %}
+
+</section>
+
+<!-- HOW IT HELPS -->
+<section class="recommendation-help">
+
+    <div class="help-heading">
+        <span class="section-eyebrow">WHY IT MATTERS</span>
+        <h2>How These Insights Help Your Business</h2>
+    </div>
+
+    <div class="help-grid">
+
+        <div class="help-card">
+            <div class="help-icon">↗</div>
+            <h3>Improve Sales</h3>
+            <p>
+                Understand sales performance and identify
+                opportunities to increase revenue.
+            </p>
+        </div>
+
+        <div class="help-card">
+            <div class="help-icon">♙</div>
+            <h3>Understand Customers</h3>
+            <p>
+                Learn about customer purchasing behaviour
+                and identify valuable customer groups.
+            </p>
+        </div>
+
+        <div class="help-card">
+            <div class="help-icon">◎</div>
+            <h3>Plan Better</h3>
+            <p>
+                Use business insights and forecasts to
+                support future planning.
+            </p>
+        </div>
+
+    </div>
+
+</section>
 
 <!-- AI BUSINESS ADVISOR -->
-
 <section class="advisor-section">
 
-    <div class="section-header">
-        <h2>✦ AI Business Advisor</h2>
-        <p>Ask questions about your business data and get intelligent insights.</p>
+    <div class="advisor-title">
+        <div>
+            <span class="section-eyebrow">ASK YOUR QUESTIONS</span>
+            <h2>AI Business Advisor</h2>
+            <p>
+                Have a question about your business data?
+                Ask the AI assistant for a simple explanation.
+            </p>
+        </div>
+        <div class="advisor-title-icon">✦</div>
     </div>
 
     <div class="advisor-card">
 
+        <!-- CHAT HEADER -->
         <div class="advisor-header">
+
             <div class="advisor-avatar">AI</div>
 
             <div class="advisor-info">
                 <h3>Enterprise AI Assistant</h3>
-                <p>Your personal business intelligence assistant</p>
+                <p>Business data analysis assistant</p>
             </div>
 
-            <span class="advisor-status">● Ready</span>
+            <span class="advisor-status">
+                <span class="status-dot"></span>
+                Ready
+            </span>
+
         </div>
 
+        <!-- CHAT MESSAGES -->
         <div class="chat-messages" id="chatMessages">
 
             <div class="bot-message">
-                <strong>Hello! 👋</strong>
-                <p>
-                    Welcome to your AI Business Advisor.
-                    Ask me questions about sales, customers,
-                    forecasting, segmentation and business performance.
-                </p>
+                <div class="message-avatar">AI</div>
+                <div class="message-content">
+                    <strong>Welcome!</strong>
+                    <p>
+                        I'm your AI Business Advisor. You can ask me
+                        questions about sales, customers, forecasting,
+                        segmentation and business performance.
+                    </p>
+                </div>
             </div>
 
         </div>
 
+        <!-- SUGGESTED QUESTIONS -->
         <div class="suggested-questions">
 
-            <h4>Suggested Questions</h4>
+            <h4>Try asking</h4>
 
-            <button onclick="askQuestion('Which region has the highest sales?')">
-                Which region has the highest sales?
-            </button>
+            <div class="question-buttons">
 
-            <button onclick="askQuestion('Who are my most valuable customers?')">
-                Who are my most valuable customers?
-            </button>
+                <button type="button"
+                    onclick="askQuestion('Which region has the highest sales?')">
+                    Which region has the highest sales?
+                </button>
 
-            <button onclick="askQuestion('How can I improve my sales?')">
-                How can I improve my sales?
-            </button>
+                <button type="button"
+                    onclick="askQuestion('Who are my most valuable customers?')">
+                    Who are my most valuable customers?
+                </button>
 
-            <button onclick="askQuestion('Explain my customer segmentation.')">
-                Explain customer segmentation.
-            </button>
+                <button type="button"
+                    onclick="askQuestion('How can I improve my sales?')">
+                    How can I improve my sales?
+                </button>
+
+                <button type="button"
+                    onclick="askQuestion('Explain my customer segmentation.')">
+                    Explain customer segmentation.
+                </button>
+
+                <button type="button"
+                    onclick="askQuestion('Explain my sales forecast.')">
+                    Explain my sales forecast.
+                </button>
+
+            </div>
 
         </div>
 
+        <!-- CHAT INPUT -->
         <div class="chat-input-area">
 
             <input
                 type="text"
                 id="userQuestion"
-                placeholder="Type your business question..."
+                placeholder="Ask something about your business..."
+                maxlength="500"
+                autocomplete="off"
             >
 
-            <button id="sendQuestionBtn" onclick="sendQuestion()">
-                Send ➤
+            <button
+                type="button"
+                id="sendQuestionBtn"
+                onclick="sendQuestion()">
+                Send ↗
             </button>
 
+        </div>
+
+        <div class="advisor-footer">
+            AI responses are based on the available uploaded dataset.
         </div>
 
     </div>
 
 </section>
 
+<!-- CHAT JAVASCRIPT -->
+<script>
+
+const advisorUrl = "{{ url_for('ai_advisor') }}";
+
+function addChatMessage(message, type) {
+
+    const chat = document.getElementById("chatMessages");
+
+    const wrapper = document.createElement("div");
+    wrapper.className = type === "user"
+        ? "user-message"
+        : "bot-message";
+
+    if (type === "bot") {
+
+        const avatar = document.createElement("div");
+        avatar.className = "message-avatar";
+        avatar.textContent = "AI";
+
+        const content = document.createElement("div");
+        content.className = "message-content";
+
+        const paragraph = document.createElement("p");
+        paragraph.textContent = message;
+
+        content.appendChild(paragraph);
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(content);
+
+    } else {
+
+        const paragraph = document.createElement("p");
+        paragraph.textContent = message;
+        wrapper.appendChild(paragraph);
+
+    }
+
+    chat.appendChild(wrapper);
+    chat.scrollTop = chat.scrollHeight;
+
+    return wrapper;
+}
+
+function askQuestion(question) {
+
+    const input = document.getElementById("userQuestion");
+
+    input.value = question;
+    sendQuestion();
+
+}
+
+async function sendQuestion() {
+
+    const input = document.getElementById("userQuestion");
+    const button = document.getElementById("sendQuestionBtn");
+
+    const question = input.value.trim();
+
+    if (!question || button.disabled) {
+        return;
+    }
+
+    addChatMessage(question, "user");
+
+    input.value = "";
+
+    button.disabled = true;
+    button.textContent = "Thinking...";
+
+    const loading = addChatMessage(
+        "Analysing your business data...",
+        "bot"
+    );
+
+    try {
+
+        const response = await fetch(advisorUrl, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                question: question
+            })
+
+        });
+
+        const result = await response.json();
+
+        loading.querySelector(".message-content p").textContent =
+            result.answer || "No response received.";
+
+    } catch (error) {
+
+        loading.querySelector(".message-content p").textContent =
+            "Unable to connect. Please try again.";
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "Send ↗";
+
+        input.focus();
+
+        const chat = document.getElementById("chatMessages");
+        chat.scrollTop = chat.scrollHeight;
+
+    }
+
+}
+
+document.getElementById("userQuestion").addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+            sendQuestion();
+        }
+
+    }
+);
+
+</script>
 
 {% endblock %}
-
