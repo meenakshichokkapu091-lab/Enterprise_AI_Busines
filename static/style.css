@@ -803,3 +803,66 @@ tbody tr:hover {
         font-size: 17px;
     }
 }
+
+/* FINAL NAVIGATION BUTTON FIX */
+
+.page-navigation {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100%;
+    gap: 15px;
+    margin-top: 35px;
+    padding: 22px 0;
+    border-top: 1px solid #e8edf4;
+}
+
+.page-navigation .page-nav-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 145px;
+    padding: 13px 22px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+.page-navigation .previous-btn {
+    background: #ffffff !important;
+    color: #34445b !important;
+    border: 1px solid #dce4ee !important;
+}
+
+.page-navigation .next-btn {
+    background: var(--accent, #4385df) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--accent, #4385df) !important;
+}
+
+.page-navigation .previous-btn:hover {
+    background: #edf2f8 !important;
+    transform: translateX(-3px);
+}
+
+.page-navigation .next-btn:hover {
+    filter: brightness(0.9);
+    transform: translateX(3px);
+}
+
+.page-progress {
+    color: #8290a4;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .page-navigation .page-nav-btn {
+        min-width: 105px;
+        padding: 11px 13px;
+        font-size: 11px;
+    }
+}
+
