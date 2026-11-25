@@ -866,3 +866,166 @@ tbody tr:hover {
     }
 }
 
+/* AI BUSINESS ADVISOR */
+
+.advisor-section {
+    margin-top: 35px;
+}
+
+.advisor-section .section-header {
+    margin-bottom: 20px;
+}
+
+.advisor-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.advisor-header {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.advisor-avatar {
+    width: 45px;
+    height: 45px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: #e9efff;
+    color: #4385df;
+    font-weight: 800;
+}
+
+.advisor-info h3 {
+    font-size: 14px;
+}
+
+.advisor-info p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 5px;
+}
+
+.advisor-status {
+    margin-left: auto;
+    color: #239b69;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.chat-messages {
+    height: 320px;
+    overflow-y: auto;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #f8faff;
+}
+
+.bot-message,
+.user-message {
+    max-width: 80%;
+    padding: 13px 16px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+.bot-message {
+    align-self: flex-start;
+    background: #ffffff;
+    border: 1px solid #e5eaf2;
+    color: #43516a;
+}
+
+.bot-message p {
+    margin-top: 5px;
+}
+
+.user-message {
+    align-self: flex-end;
+    background: var(--accent);
+    color: #ffffff;
+}
+
+.suggested-questions {
+    padding: 18px 20px;
+    border-top: 1px solid var(--border);
+}
+
+.suggested-questions h4 {
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.suggested-questions button {
+    margin: 4px;
+    padding: 9px 13px;
+    background: #f1f5fc;
+    color: #49617e;
+    border: 1px solid #e1e9f4;
+    border-radius: 20px;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.suggested-questions button:hover {
+    background: #e4edfc;
+}
+
+.chat-input-area {
+    display: flex;
+    gap: 10px;
+    padding: 17px 20px;
+    border-top: 1px solid var(--border);
+}
+
+.chat-input-area input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid #dce4ee;
+    border-radius: 9px;
+    outline: none;
+    font-size: 12px;
+}
+
+.chat-input-area input:focus {
+    border-color: var(--accent);
+}
+
+.chat-input-area button {
+    padding: 12px 20px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .chat-messages {
+        height: 300px;
+        padding: 14px;
+    }
+
+    .bot-message,
+    .user-message {
+        max-width: 95%;
+    }
+
+    .chat-input-area {
+        padding: 12px;
+    }
+}
+
+
