@@ -11,6 +11,92 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        /* PAGE NAVIGATION */
+
+        .page-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            width: 100%;
+            margin-top: 35px;
+            padding: 22px 0;
+            border-top: 1px solid #e8edf4;
+        }
+
+        .page-nav-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 145px;
+            padding: 13px 22px;
+            border-radius: 9px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none !important;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .previous-btn {
+            background: #ffffff;
+            color: #34445b !important;
+            border: 1px solid #dce4ee;
+            box-shadow: 0 2px 6px rgba(30, 50, 80, 0.05);
+        }
+
+        .previous-btn:hover {
+            background: #edf2f8;
+            border-color: #b8c7d9;
+            transform: translateX(-3px);
+        }
+
+        .next-btn {
+            background: var(--accent, #4385df);
+            color: #ffffff !important;
+            border: 1px solid var(--accent, #4385df);
+            box-shadow: 0 5px 13px rgba(50, 90, 150, 0.15);
+        }
+
+        .next-btn:hover {
+            filter: brightness(0.91);
+            transform: translateX(3px);
+            box-shadow: 0 7px 17px rgba(50, 90, 150, 0.2);
+        }
+
+        .page-progress {
+            color: #8290a4;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .page-nav-btn:focus-visible {
+            outline: 3px solid rgba(67, 133, 223, 0.3);
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 600px) {
+            .page-navigation {
+                gap: 8px;
+                margin-top: 25px;
+                padding: 18px 0;
+            }
+
+            .page-nav-btn {
+                min-width: 105px;
+                padding: 11px 13px;
+                font-size: 11px;
+            }
+
+            .page-progress {
+                font-size: 10px;
+            }
+        }
+    </style>
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
@@ -121,13 +207,16 @@
             {% endfor %}
 
             {% if current.index != -1 %}
+
             <div class="page-navigation">
 
                 {% if current.index > 0 %}
+
                     <a class="page-nav-btn previous-btn"
                        href="{{ url_for(workflow_pages[current.index - 1][0]) }}">
                         ← Previous
                     </a>
+
                 {% else %}
                     <span></span>
                 {% endif %}
@@ -137,18 +226,23 @@
                 </span>
 
                 {% if current.index < workflow_pages|length - 1 %}
+
                     <a class="page-nav-btn next-btn"
                        href="{{ url_for(workflow_pages[current.index + 1][0]) }}">
                         Next →
                     </a>
+
                 {% else %}
+
                     <a class="page-nav-btn next-btn"
                        href="{{ url_for('overview') }}">
                         Finish ✓
                     </a>
+
                 {% endif %}
 
             </div>
+
             {% endif %}
 
         </section>
