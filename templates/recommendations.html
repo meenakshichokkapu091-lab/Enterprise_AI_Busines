@@ -60,8 +60,9 @@
         <div>
             <span class="section-eyebrow">ACTION PLAN</span>
             <h2>Business Recommendations</h2>
-            <p>Suggestions generated from your business data.</p>
+            <p>Simple suggestions based on your business data.</p>
         </div>
+
         <div class="recommendation-count">
             {{ business_recommendations|length }} Insights
         </div>
@@ -81,26 +82,9 @@
             {% for recommendation in business_recommendations %}
 
             <div class="recommendation-item">
-
-                <div class="recommendation-index">
-                    {{ "%02d"|format(loop.index) }}
-                </div>
-
                 <div class="recommendation-details">
-                    <span class="recommendation-tag">
-                        BUSINESS SUGGESTION
-                    </span>
-
-                    <h3>Recommendation {{ loop.index }}</h3>
-
-                    <p>{{ recommendation }}</p>
-
-                    <div class="recommendation-action">
-                        <span>✓</span>
-                        <span>Consider this action while planning your business strategy.</span>
-                    </div>
+                    <p>✓ {{ recommendation }}</p>
                 </div>
-
             </div>
 
             {% endfor %}
@@ -111,9 +95,7 @@
 
         <div class="recommendation-empty">
             <h3>No Recommendations Available</h3>
-            <p>
-                Upload a suitable dataset to generate business recommendations.
-            </p>
+            <p>Upload a suitable dataset to generate recommendations.</p>
         </div>
 
     {% endif %}
@@ -173,6 +155,7 @@
                 Ask the AI assistant for a simple explanation.
             </p>
         </div>
+
         <div class="advisor-title-icon">✦</div>
     </div>
 
@@ -200,12 +183,13 @@
 
             <div class="bot-message">
                 <div class="message-avatar">AI</div>
+
                 <div class="message-content">
                     <strong>Welcome!</strong>
                     <p>
-                        I'm your AI Business Advisor. You can ask me
-                        questions about sales, customers, forecasting,
-                        segmentation and business performance.
+                        I'm your AI Business Advisor. Ask me about
+                        sales, customers, forecasting, segmentation
+                        and business performance.
                     </p>
                 </div>
             </div>
@@ -286,6 +270,7 @@ function addChatMessage(message, type) {
     const chat = document.getElementById("chatMessages");
 
     const wrapper = document.createElement("div");
+
     wrapper.className = type === "user"
         ? "user-message"
         : "bot-message";
@@ -303,6 +288,7 @@ function addChatMessage(message, type) {
         paragraph.textContent = message;
 
         content.appendChild(paragraph);
+
         wrapper.appendChild(avatar);
         wrapper.appendChild(content);
 
@@ -310,6 +296,7 @@ function addChatMessage(message, type) {
 
         const paragraph = document.createElement("p");
         paragraph.textContent = message;
+
         wrapper.appendChild(paragraph);
 
     }
@@ -325,8 +312,8 @@ function askQuestion(question) {
     const input = document.getElementById("userQuestion");
 
     input.value = question;
-    sendQuestion();
 
+    sendQuestion();
 }
 
 async function sendQuestion() {
@@ -386,6 +373,7 @@ async function sendQuestion() {
         input.focus();
 
         const chat = document.getElementById("chatMessages");
+
         chat.scrollTop = chat.scrollHeight;
 
     }
