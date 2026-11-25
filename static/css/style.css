@@ -693,3 +693,629 @@ tbody tr:hover {
         font-size: 17px;
     }
 }
+
+/* =========================================
+   BUSINESS RECOMMENDATIONS PAGE
+========================================= */
+
+.recommendation-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 30px;
+    margin-bottom: 25px;
+    border-radius: 15px;
+    background: linear-gradient(120deg, #172b49, #294d78);
+    color: white;
+}
+
+.hero-label,
+.section-eyebrow {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    color: #648bc5;
+    margin-bottom: 10px;
+}
+
+.recommendation-hero .hero-label {
+    color: #b9d2f6;
+}
+
+.recommendation-hero h2 {
+    font-size: 24px;
+    font-weight: 750;
+    margin-bottom: 9px;
+}
+
+.recommendation-hero p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #d3deec;
+    max-width: 580px;
+}
+
+.recommendation-hero-icon {
+    font-size: 55px;
+    color: #b9d5ff;
+    padding: 0 15px;
+}
+
+/* SUMMARY CARDS */
+
+.recommendation-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 38px;
+}
+
+.summary-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 21px;
+    background: #ffffff;
+    border: 1px solid #e8edf4;
+    border-radius: 12px;
+    min-width: 0;
+    box-shadow: 0 3px 12px rgba(30, 50, 80, 0.035);
+}
+
+.summary-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    font-size: 23px;
+    font-weight: 700;
+}
+
+.sales-icon {
+    background: #e9f5ee;
+    color: #249765;
+}
+
+.customer-icon {
+    background: #edf2ff;
+    color: #5377d5;
+}
+
+.records-icon {
+    background: #fff3e8;
+    color: #d18a3b;
+}
+
+.summary-card p {
+    color: #8491a4;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.summary-card h3 {
+    color: #25334a;
+    font-size: 20px;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+.summary-card span {
+    display: block;
+    margin-top: 5px;
+    color: #9aa5b4;
+    font-size: 10px;
+}
+
+/* RECOMMENDATIONS */
+
+.recommendations-content {
+    margin-bottom: 38px;
+}
+
+.recommendation-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.recommendation-heading h2,
+.help-heading h2,
+.advisor-title h2 {
+    font-size: 20px;
+    color: #25334a;
+    font-weight: 750;
+    margin-bottom: 7px;
+}
+
+.recommendation-heading p,
+.advisor-title p {
+    color: #8290a4;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.recommendation-count {
+    padding: 9px 14px;
+    border-radius: 20px;
+    background: #edf3fc;
+    color: #456caa;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.recommendation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.recommendation-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 17px;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e8edf4;
+    border-radius: 12px;
+    transition: box-shadow 0.2s ease,
+                transform 0.2s ease;
+}
+
+.recommendation-item:hover {
+    box-shadow: 0 6px 18px rgba(30, 50, 80, 0.07);
+    transform: translateY(-2px);
+}
+
+.recommendation-index {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: #edf3fc;
+    color: #4776b8;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.recommendation-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.recommendation-tag {
+    color: #6686b4;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.9px;
+}
+
+.recommendation-details h3 {
+    margin: 7px 0;
+    color: #2a3950;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.recommendation-details p {
+    color: #65748a;
+    font-size: 12px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.recommendation-action {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 13px;
+    padding: 11px 13px;
+    border-radius: 8px;
+    background: #f4f8fc;
+    color: #526b8c;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.recommendation-action span:first-child {
+    color: #29976c;
+    font-weight: 800;
+}
+
+.recommendation-empty {
+    padding: 35px;
+    background: #ffffff;
+    border: 1px dashed #dce4ee;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.recommendation-empty h3 {
+    color: #34445b;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.recommendation-empty p {
+    color: #8491a4;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* HOW IT HELPS */
+
+.recommendation-help {
+    margin-bottom: 42px;
+}
+
+.help-heading {
+    margin-bottom: 18px;
+}
+
+.help-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.help-card {
+    padding: 21px;
+    background: #ffffff;
+    border: 1px solid #e8edf4;
+    border-radius: 12px;
+}
+
+.help-icon {
+    width: 39px;
+    height: 39px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 14px;
+    border-radius: 10px;
+    background: #edf3fc;
+    color: #4b79ba;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.help-card h3 {
+    color: #34445b;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.help-card p {
+    color: #8290a4;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+/* AI ADVISOR */
+
+.advisor-section {
+    margin-top: 38px;
+    margin-bottom: 30px;
+}
+
+.advisor-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 19px;
+}
+
+.advisor-title-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: #eaf0ff;
+    color: #537bd0;
+    font-size: 26px;
+}
+
+.advisor-card {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(30, 50, 80, 0.04);
+}
+
+.advisor-header {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 19px 22px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.advisor-avatar {
+    width: 43px;
+    height: 43px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: #eaf0ff;
+    color: #4d75ca;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.advisor-info {
+    min-width: 0;
+}
+
+.advisor-info h3 {
+    color: #2b3a50;
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.advisor-info p {
+    margin-top: 5px;
+    color: #8995a7;
+    font-size: 10px;
+}
+
+.advisor-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-left: auto;
+    color: #26956b;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #2caa78;
+}
+
+/* CHAT AREA */
+
+.chat-messages {
+    height: 330px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+    padding: 22px;
+    background: #f7f9fc;
+}
+
+.bot-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    max-width: 85%;
+}
+
+.message-avatar {
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: #e7eeff;
+    color: #5275c4;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.message-content {
+    padding: 13px 15px;
+    background: #ffffff;
+    border: 1px solid #e7ebf2;
+    border-radius: 4px 12px 12px 12px;
+    color: #506078;
+    font-size: 12px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.message-content strong {
+    display: block;
+    color: #34445b;
+    margin-bottom: 4px;
+}
+
+.user-message {
+    align-self: flex-end;
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 12px 4px 12px 12px;
+    background: #416fc0;
+    color: #ffffff;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+/* SUGGESTED QUESTIONS */
+
+.suggested-questions {
+    padding: 17px 21px;
+    border-top: 1px solid #edf0f5;
+}
+
+.suggested-questions h4 {
+    color: #46556c;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 11px;
+}
+
+.question-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.question-buttons button {
+    padding: 9px 12px;
+    border: 1px solid #e1e8f2;
+    border-radius: 20px;
+    background: #f7f9fc;
+    color: #536985;
+    font-size: 10px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.question-buttons button:hover {
+    background: #eaf1fd;
+    border-color: #c7d7f1;
+    color: #345e9f;
+}
+
+/* CHAT INPUT */
+
+.chat-input-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 17px 21px;
+    border-top: 1px solid #edf0f5;
+}
+
+.chat-input-area input {
+    flex: 1;
+    min-width: 0;
+    height: 43px;
+    padding: 0 14px;
+    border: 1px solid #dce4ee;
+    border-radius: 9px;
+    outline: none;
+    background: #ffffff;
+    color: #34445b;
+    font-size: 12px;
+}
+
+.chat-input-area input:focus {
+    border-color: #6c91d0;
+    box-shadow: 0 0 0 3px rgba(80, 120, 190, 0.09);
+}
+
+.chat-input-area button {
+    height: 43px;
+    padding: 0 21px;
+    border: none;
+    border-radius: 9px;
+    background: #416fc0;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.chat-input-area button:hover {
+    background: #315da7;
+}
+
+.chat-input-area button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.advisor-footer {
+    padding: 0 21px 16px;
+    color: #9aa5b4;
+    font-size: 10px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+
+    .recommendation-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .help-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .recommendation-hero {
+        padding: 22px;
+    }
+
+    .recommendation-hero h2 {
+        font-size: 19px;
+    }
+
+    .recommendation-hero-icon {
+        font-size: 35px;
+        padding: 0;
+    }
+
+    .recommendation-summary {
+        grid-template-columns: 1fr;
+        gap: 11px;
+    }
+
+    .recommendation-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .recommendation-item {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .recommendation-index {
+        width: 35px;
+        height: 35px;
+    }
+
+    .advisor-title h2 {
+        font-size: 18px;
+    }
+
+    .chat-messages {
+        height: 300px;
+        padding: 15px;
+    }
+
+    .bot-message,
+    .user-message {
+        max-width: 95%;
+    }
+
+    .suggested-questions {
+        padding: 15px;
+    }
+
+    .chat-input-area {
+        padding: 13px;
+    }
+
+    .chat-input-area button {
+        padding: 0 14px;
+    }
+
+}
+
