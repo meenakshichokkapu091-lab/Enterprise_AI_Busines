@@ -51,5 +51,81 @@
     </ul>
 </div>
 
+<!-- AI BUSINESS ADVISOR -->
+
+<section class="advisor-section">
+
+    <div class="section-header">
+        <h2>✦ AI Business Advisor</h2>
+        <p>Ask questions about your business data and get intelligent insights.</p>
+    </div>
+
+    <div class="advisor-card">
+
+        <div class="advisor-header">
+            <div class="advisor-avatar">AI</div>
+
+            <div class="advisor-info">
+                <h3>Enterprise AI Assistant</h3>
+                <p>Your personal business intelligence assistant</p>
+            </div>
+
+            <span class="advisor-status">● Ready</span>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+
+            <div class="bot-message">
+                <strong>Hello! 👋</strong>
+                <p>
+                    Welcome to your AI Business Advisor.
+                    Ask me questions about sales, customers,
+                    forecasting, segmentation and business performance.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="suggested-questions">
+
+            <h4>Suggested Questions</h4>
+
+            <button onclick="askQuestion('Which region has the highest sales?')">
+                Which region has the highest sales?
+            </button>
+
+            <button onclick="askQuestion('Who are my most valuable customers?')">
+                Who are my most valuable customers?
+            </button>
+
+            <button onclick="askQuestion('How can I improve my sales?')">
+                How can I improve my sales?
+            </button>
+
+            <button onclick="askQuestion('Explain my customer segmentation.')">
+                Explain customer segmentation.
+            </button>
+
+        </div>
+
+        <div class="chat-input-area">
+
+            <input
+                type="text"
+                id="userQuestion"
+                placeholder="Type your business question..."
+            >
+
+            <button id="sendQuestionBtn" onclick="sendQuestion()">
+                Send ➤
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
 {% endblock %}
 
